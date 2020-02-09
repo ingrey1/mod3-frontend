@@ -2,8 +2,8 @@
 
    // our base endpoints
    const urls = {
-      login: "localhost:3000/login",
-      signup: "localhost:3000/signup"
+      login: "localhost:3000/api/v1/login",
+      signup: "localhost:3000/api/v1/signup"
       // add new api base endpoints here
    }
 
@@ -25,11 +25,14 @@
    // methods that use fetch to communicate with external music apis
 
    // methods used to render the 'view' or 'view' elements
-   function renderView(view) {
+   function renderView(view, viewName) {
       
        const mainElement = document.querySelector("#main")
        mainElement.innerHTML = ""
        mainElement.innerHTML += view
+
+       if (viewName === 'login') attachListenersForLoginView()
+       // elsif view is 'signup' attach signup listeners, etc.
 
    }
    // methods used to create the 'views' - e.g., the signup page, the login page, the playlist page etc.   
@@ -51,6 +54,15 @@
               
        
              </div>`
+   }
+
+
+   // event listeners
+   function attachListenersForLoginView() {
+       const formElement = document.querySelector("#login-form")
+       formElement.addEventListener('submit', function(){
+           // do stuff
+       })
    }
 
 
