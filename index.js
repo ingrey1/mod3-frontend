@@ -1,5 +1,13 @@
 (() => { // application code lives inside of iffy
 
+   // our base endpoints
+   const urls = {
+      login: "localhost:3000/login",
+      signup: "localhost:3000/signup"
+      // add new api base endpoints here
+   }
+
+
    document.addEventListener('DOMContentLoaded', function(){
 
       renderView(createLoginView())
