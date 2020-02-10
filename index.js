@@ -2,8 +2,8 @@
 
    // our base endpoints
    const urls = {
-      login: "localhost:3000/api/v1/login",
-      signup: "localhost:3000/api/v1/signup"
+      login: "http://localhost:3000/api/v1/login",
+      signup: "http://localhost:3000/api/v1/users/signup"
       // add new api base endpoints here
    }
 
@@ -37,7 +37,7 @@
               'Content-Type': 'application/json',
               'Accept': 'application/json'
           },
-          body: JSON.stringify(userData);
+          body: JSON.stringify(userData)
          }
          return fetch(urls.signup, configuration).then(resp => resp.json())
      } 
@@ -66,12 +66,10 @@
                <form id="login-form">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" required /><br><br>
-                <label for="username">Username</label>
-                <input type="text" name="username" id="username" required /><br><br>
+               
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" required /><br><br>
-                <label for="password_confirmation">Password Confirmation</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" required /><br><br>
+              
                 <input type="submit" value="Login" />
                </form>
                <a id="signup" href="#">Signup</a>
@@ -87,6 +85,8 @@
     <div id="signup-div" class="grid-item">
      <h2>Signup</h2> 
     <form id="signup-form">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" required>
     <label for="first-name">First Name</label>
      <input type="text" name="first-name" id="first-name" required /><br><br>
      <label for="last-name">Last Name</label>
@@ -95,8 +95,8 @@
      <input type="text" name="username" id="username" required /><br><br>
      <label for="password">Password</label>
      <input type="password" name="password" id="password" required /><br><br>
-     <label for="password_confirmation">Password Confirmation</label>
-     <input type="password" name="password_confirmation" id="password_confirmation" required /><br><br>
+     <label for="password-confirmation">Password Confirmation</label>
+     <input type="password" name="password_confirmation" id="password-confirmation" required /><br><br>
      <input type="submit" value="Signup" />
     </form>
     <a id="login" href="#">Login</a>
@@ -106,6 +106,10 @@
   <div id="signup-errors"></div>
   <div class="grid-item hidden"></div>`
 
+   }
+
+   function createWelcomeView() {
+       return ``
    }
 
 
@@ -147,12 +151,20 @@
             password_confirmation: passwordConfirmation 
          }}
          // handle errors
+        
          const errors = validSignupData(userData)
-         if (errors.length >= 0) renderSignupErrors
+         //debugger
+         if (errors.length > 0) renderSignupErrors(errors)
+        
          else // sign up the user, render their homepage
             {
-                
-                postSignup(userData).then(userData => )
+                debugger       
+                postSignup(userData).then(userData => {
+                    saveToken(userData.token)
+                    saveAllUserDataLocally(userData)
+                   
+                    renderView(createWelcomeView(), 'welcome')
+                } )
             
             
             }
@@ -188,11 +200,17 @@
    // validation methods
    function renderSignupErrors(errors) {
     const errorDiv = document.querySelector("#signup-errors")
-    
+       //debugger
        if (errors.length > 0) {
           // display errors
           errorDiv.innerHTML = "There are errors for these fields: "
-          errorDiv.innerHTML += errors.reduce("", (memo, error) => memo += (" " + error) ) 
+          errorDiv.innerHTML += errors.reduce((memo, error) => {
+              memo += (" " + error)
+              return memo   
+            }, "" ) 
+            //
+            
+          //debugger
           setTimeout(() => {
             // clear the error display
             errorDiv.innerHTML = ""
@@ -212,9 +230,9 @@
     if (!validEmail(data.user_info.email)) errors.push('Email')
     if (!validUsername(data.user_info.username)) errors.push('Username')
     if (!validPassword(data.user_info.password)) errors.push('Password')
-    if (!validPasswordConfirmation(data.user_info.password_confirmation)) errors.push('Password')
+    if (!validPasswordConfirmation(data.user_info.password, data.user_info.password_confirmation)) errors.push('Password')
 
-
+     //debugger
     return errors
 
          
