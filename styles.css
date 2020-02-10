@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: auto;
+    margin-top: 50px;
 }
 
 .grid-item {
@@ -15,4 +16,16 @@
 
 .hidden {
     visibility: hidden
+}
+
+.nav-ul {
+    
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+}
+
+li {
+    display: inline-block;
+    
 }
