@@ -10,7 +10,7 @@
 
    document.addEventListener('DOMContentLoaded', function(){
 
-      renderView(createLoginView())
+      renderView(createLoginView(), 'login')
 
 
 
@@ -38,8 +38,9 @@
    // methods used to create the 'views' - e.g., the signup page, the login page, the playlist page etc.   
    function createLoginView() {
 
-       return `<div id="login" class="">
-                 
+       return `<div class="grid-item hidden"></div>
+               <div id="login" class="grid-item">
+                <h2>Login</h2> 
                <form id="login-form">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" required /><br><br>
@@ -53,7 +54,8 @@
                </form>
               
        
-             </div>`
+             </div>
+             <div class="grid-item hidden"></div>`
    }
 
 
