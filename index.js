@@ -7,6 +7,15 @@
       // add new api base endpoints here
    }
 
+   const currentUserInfo = {
+       user: {
+
+       },
+       userPlaylists: {
+         
+       }
+   }
+
 
    document.addEventListener('DOMContentLoaded', function(){
 
@@ -21,6 +30,18 @@
      // user login
 
      // user signup
+     function postSignup(userData) {
+         const configuration = {
+          method: "POST",
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          },
+          body: JSON.stringify(userData);
+         }
+         return fetch(urls.signup, configuration).then(resp => resp.json())
+     } 
+     
 
    // methods that use fetch to communicate with external music apis
 
@@ -82,6 +103,7 @@
    
 
   </div>
+  <div id="signup-errors"></div>
   <div class="grid-item hidden"></div>`
 
    }
@@ -112,6 +134,7 @@
         const firstName = document.querySelector("#first-name").value
         const lastName = document.querySelector("#last-name").value
         const email = document.querySelector("#email").value
+        const username = document.querySelector("#username").value
         const password = document.querySelector("#password").value
         const passwordConfirmation = document.querySelector("#password-confirmation").value
 
@@ -120,9 +143,23 @@
             last_name: lastName,
             email,
             password,
+            username,
             password_confirmation: passwordConfirmation 
-         }
-        } 
+         }}
+         // handle errors
+         const errors = validSignupData(userData)
+         if (errors.length >= 0) renderSignupErrors
+         else // sign up the user, render their homepage
+            {
+                
+                postSignup(userData).then(userData => )
+            
+            
+            }
+
+
+
+         
     })
     // set listener for rendering login view
     loginLinkElement.addEventListener('click', function(){
@@ -133,38 +170,91 @@
     
 
    // helper methods
+
+   function saveAllUserDataLocally(data, doSavePlaylists) {
+       // save user data
+       saveUserData(data.user_info)
+       // save playlist data
+        if (doSavePlaylists) savePlaylistData(data.playlists)
+       
+   }
+
+   function saveUserData(user) {
+       currentUserInfo.user = user
+   } 
    
 
 
    // validation methods
    function renderSignupErrors(errors) {
+    const errorDiv = document.querySelector("#signup-errors")
+    
+       if (errors.length > 0) {
+          // display errors
+          errorDiv.innerHTML = "There are errors for these fields: "
+          errorDiv.innerHTML += errors.reduce("", (memo, error) => memo += (" " + error) ) 
+          setTimeout(() => {
+            // clear the error display
+            errorDiv.innerHTML = ""
+          }, 5000)
+       } 
+       
+       
       
    }
 
    function validSignupData(data) {
+
+    const errors = []
+
+    if (!validFirstName(data.user_info.first_name)) errors.push('First Name')
+    if (!validLastName(data.user_info.last_name)) errors.push('Last Name')
+    if (!validEmail(data.user_info.email)) errors.push('Email')
+    if (!validUsername(data.user_info.username)) errors.push('Username')
+    if (!validPassword(data.user_info.password)) errors.push('Password')
+    if (!validPasswordConfirmation(data.user_info.password_confirmation)) errors.push('Password')
+
+
+    return errors
 
          
 
    }
 
    function validFirstName(name) {
-
+     return true
    }
 
    function validLastName(name) {
-
+      return true
    }
 
    function validEmail(email) {
+      return true
+   }
 
+   function validUsername(username) {
+      return true
    }
 
    function validPassword(password) {
-
+     return true
    }
 
    function validPasswordConfirmation(password, passwordConfirmation) {
-       
+     return password === passwordConfirmation
+   }
+   // authorization / token stuff
+   function saveToken(token) {
+       localStorage.setItem('music_token', token)
+   }
+
+   function retrieveToken() {
+       localStorage.getItem('music_token')
+   }
+
+   function clearToken() {
+       localStorage.removeItem('music_token')
    }
    
 
