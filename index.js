@@ -29,6 +29,12 @@
      
      // user login
 
+     function postLogin(userData) {
+         const configuration = {
+
+         }
+     }
+
      // user signup
      function postSignup(userData) {
          const configuration = {
@@ -120,8 +126,23 @@
        // set listener on submit for logging in user
        const loginFormElement = document.querySelector("#login-form")
        const signupLinkElement = document.querySelector("#signup")
-       loginFormElement.addEventListener('submit', function(){
-           // do stuff
+       loginFormElement.addEventListener('submit', function(e){
+           e.preventDefault()
+           clearToken()
+           const email = loginFormElement.querySelector("#email")
+           const password = loginFormElement.querySelector("#password")
+           const userDataObject = {user_info: {email, password}}
+           postLogin(userDataObject).then(data =>{
+                   if (data && data.errors) renderLoginErrors(data.errors)
+                   else { // no errors, so user will have jwt token, and data
+                     saveToken(data.token)
+                     saveAllUserDataLocally(data, false)
+                     renderView(createWelcomeView(), 'welcome')
+                   }
+           } )
+
+
+
        })
        // set listener on signup button for rendering signup form
        signupLinkElement.addEventListener('click', function(){
@@ -167,7 +188,7 @@
                 //debugger       
                 postSignup(userData).then(userData => {
                     clearToken()
-                    debugger
+                    //debugger
                     saveToken(userData.token)
                     saveAllUserDataLocally(userData, false)
                     
