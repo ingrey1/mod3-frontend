@@ -107,8 +107,22 @@
     // set listener for signing user up   
     const formElement = document.querySelector("#signup-form")
     const loginLinkElement = document.querySelector("#login")
-    formElement.addEventListener('submit', function(){
-        // do stuff
+    formElement.addEventListener('submit', function(e){
+        e.preventDefault()
+        const firstName = document.querySelector("#first-name").value
+        const lastName = document.querySelector("#last-name").value
+        const email = document.querySelector("#email").value
+        const password = document.querySelector("#password").value
+        const passwordConfirmation = document.querySelector("#password-confirmation").value
+
+        const userData = {user_info: { 
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            password,
+            password_confirmation: passwordConfirmation 
+         }
+        } 
     })
     // set listener for rendering login view
     loginLinkElement.addEventListener('click', function(){
@@ -116,13 +130,43 @@
     })
 }
 
-
+    
 
    // helper methods
    
 
 
+   // validation methods
+   function renderSignupErrors(errors) {
+      
+   }
 
+   function validSignupData(data) {
+
+         
+
+   }
+
+   function validFirstName(name) {
+
+   }
+
+   function validLastName(name) {
+
+   }
+
+   function validEmail(email) {
+
+   }
+
+   function validPassword(password) {
+
+   }
+
+   function validPasswordConfirmation(password, passwordConfirmation) {
+       
+   }
+   
 
 
 
