@@ -54,6 +54,7 @@
 
        if (viewName === 'login') attachListenersForLoginView()
        else if (viewName === 'signup') attachListenersForSignupView()
+       else if (viewName === 'welcome') attachListenersForWelcomeView()
        // elsif view is 'signup' attach signup listeners, etc.
 
    }
@@ -109,7 +110,8 @@
    }
 
    function createWelcomeView() {
-       return ``
+       //debugger
+       return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1>`
    }
 
 
@@ -126,6 +128,10 @@
            renderView(createSignupView(), 'signup')
        })
 
+
+   }
+
+   function attachListenersForWelcomeView() {
 
    }
 
@@ -158,11 +164,13 @@
         
          else // sign up the user, render their homepage
             {
-                debugger       
+                //debugger       
                 postSignup(userData).then(userData => {
+                    clearToken()
+                    debugger
                     saveToken(userData.token)
-                    saveAllUserDataLocally(userData)
-                   
+                    saveAllUserDataLocally(userData, false)
+                    
                     renderView(createWelcomeView(), 'welcome')
                 } )
             
@@ -185,7 +193,7 @@
 
    function saveAllUserDataLocally(data, doSavePlaylists) {
        // save user data
-       saveUserData(data.user_info)
+       saveUserData(data.user)
        // save playlist data
         if (doSavePlaylists) savePlaylistData(data.playlists)
        
