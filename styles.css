@@ -29,3 +29,7 @@ li {
     display: inline-block;
     
 }
+
+#signup-errors {
+    color: red
+}
