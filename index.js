@@ -32,6 +32,7 @@
        mainElement.innerHTML += view
 
        if (viewName === 'login') attachListenersForLoginView()
+       else if (viewName === 'signup') attachListenersForSignupView()
        // elsif view is 'signup' attach signup listeners, etc.
 
    }
@@ -66,6 +67,13 @@
            // do stuff
        })
    }
+
+   function attachListenersForSignupView() {
+    const formElement = document.querySelector("#signup-form")
+    formElement.addEventListener('submit', function(){
+        // do stuff
+    })
+}
 
 
 
