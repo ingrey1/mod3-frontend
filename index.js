@@ -23,6 +23,19 @@
    })
 
    // methods that use fetch to communicate with our rails backend api
+     //  add song to user's playlist
+     function postSong(data) {
+
+         const configuration = {
+             method: "POST",
+             headers: {
+                 'Content-Type': 'application/json',
+                 'Accept': 'application/json'
+             },
+             body: JSON.stringify(data)
+         }
+         return fetch(urls.addSongToPlaylist, configuration).then(resp => resp.json())
+     }
      
      // user login
 
