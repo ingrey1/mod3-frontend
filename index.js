@@ -3,7 +3,8 @@
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
-      signup: "http://localhost:3000/api/v1/users/signup"
+      signup: "http://localhost:3000/api/v1/users/signup",
+      addSongToPlaylist: "http://localhost:3000//api/v1/users"
       // add new api base endpoints here
    }
 
@@ -25,6 +26,18 @@
    // methods that use fetch to communicate with our rails backend api
      //  add song to user's playlist
      function postSong(data) {
+        // data structure 
+        /*
+          {  
+             play_list_id: id    
+            
+             song_info: {
+                // song attributes
+             }  
+        
+          }  
+        */
+        const fullUrl = urls.addSongToPlaylist + `/${currentUserInfo.user.id}/playlists/${data.play_list_id}/songs`
 
          const configuration = {
              method: "POST",
@@ -32,9 +45,9 @@
                  'Content-Type': 'application/json',
                  'Accept': 'application/json'
              },
-             body: JSON.stringify(data)
+             body: JSON.stringify(data.song_info)
          }
-         return fetch(urls.addSongToPlaylist, configuration).then(resp => resp.json())
+         return fetch(fullUrl, configuration).then(resp => resp.json())
      }
      
      // user login
