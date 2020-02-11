@@ -188,11 +188,13 @@
                 //debugger       
                 postSignup(userData).then(userData => {
                     clearToken()
-                    //debugger
-                    saveToken(userData.token)
-                    saveAllUserDataLocally(userData, false)
-                    
-                    renderView(createWelcomeView(), 'welcome')
+                    if (userData && userData.errors) renderLoginErrors(userData.errors)
+                    else {
+                        saveToken(userData.token)
+                        saveAllUserDataLocally(userData, false)
+                        renderView(createWelcomeView(), 'welcome')
+                    }
+                  
                 } )
             
             
