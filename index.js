@@ -1,5 +1,5 @@
 (() => { // application code lives inside of iffy
-
+   clearToken()
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
@@ -18,7 +18,7 @@
 
 
    document.addEventListener('DOMContentLoaded', function(){
-
+      listForNavbarClicks()
       renderView(createLoginView(), 'login')
    })
 
@@ -64,9 +64,18 @@
        mainElement.innerHTML = ""
        mainElement.innerHTML += view
 
-       if (viewName === 'login') attachListenersForLoginView()
-       else if (viewName === 'signup') attachListenersForSignupView()
-       else if (viewName === 'welcome') attachListenersForWelcomeView()
+       if (viewName === 'login') {
+           attachListenersForLoginView()
+           toggleNavBarHidden()
+        }
+       else if (viewName === 'signup') {
+           attachListenersForSignupView()
+           toggleNavBarHidden()
+        }
+       else if (viewName === 'welcome') {
+           attachListenersForWelcomeView()
+           toggleNavBarHidden()
+        }
        // elsif view is 'signup' attach signup listeners, etc.
 
    }
@@ -317,3 +326,42 @@
 
 
 })()
+
+
+//if there is a token i local storage called 'music token'
+ //then hide nav bar
+
+function toggleNavBarHidden() {
+    
+    const navBar = document.getElementById('nav')
+    
+    if(localStorage.getItem('music_token')) {
+        navBar.classList.remove('hidden');
+    } else {
+        navBar.classList.add('hidden')
+    }
+}
+
+// // NAV BAR PROFILE FUNCTIONALITY
+// // a. IF the profile item is clicked, renders profile view.
+// function listForNavbarClicks () {
+//     const navBar = document.getElementById('nav');
+
+//     navBar.addEventListener('click', function(event){
+//        if(event.target.id === "profile") {
+//            console.log('profile clicked')
+//            renderView(createProfileView(), 'profile')
+//        } else if (event.target.id === "playlist") {
+//            // render playlist view....
+//        } else if (event.target.id === "song-search") {
+//            //render song search...ignore for now...
+//        } else if (event.target.id === "logout") {
+//            //render logout
+//        }
+//     })
+    
+
+// }
+
+// NAV BAR PLAYLIST FUNCTIONALITY
+// a. if the playlist is clicked, renders playlist view
