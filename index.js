@@ -2,7 +2,7 @@
 
    // our base endpoints
    const urls = {
-      login: "http://localhost:3000/api/v1/login",
+      login: "http://localhost:3000/api/v1/users/login",
       signup: "http://localhost:3000/api/v1/users/signup"
       // add new api base endpoints here
    }
@@ -20,9 +20,6 @@
    document.addEventListener('DOMContentLoaded', function(){
 
       renderView(createLoginView(), 'login')
-
-
-
    })
 
    // methods that use fetch to communicate with our rails backend api
@@ -31,8 +28,17 @@
 
      function postLogin(userData) {
          const configuration = {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json',
+                 'Accept': 'application/json'
+             },
+             body: JSON.stringify(userData)
 
          }
+
+         return fetch(urls.login, configuration).then(data => data.json())
+
      }
 
      // user signup
@@ -129,9 +135,9 @@
        loginFormElement.addEventListener('submit', function(e){
            e.preventDefault()
            clearToken()
-           const email = loginFormElement.querySelector("#email")
-           const password = loginFormElement.querySelector("#password")
-           const userDataObject = {user_info: {email, password}}
+           const email = loginFormElement.querySelector("#email").value
+           const password = loginFormElement.querySelector("#password").value
+           const userDataObject = {user_info: {email: email, password: password}}
            postLogin(userDataObject).then(data =>{
                    if (data && data.errors) renderLoginErrors(data.errors)
                    else { // no errors, so user will have jwt token, and data
