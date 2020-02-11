@@ -317,3 +317,40 @@
 
 
 })()
+
+
+//if there is a token i local storage called 'music token'
+ //then hide nav bar
+
+function toggleNavBarHidden() {
+    
+    const navBar = document.getElementById('nav')
+    if(localStorage.getItem(key)) {
+        navBar.classList.add('hidden');
+    } else {
+        navBarr.classList.remove('hidden')
+    }
+}
+
+// NAV BAR PROFILE FUNCTIONALITY
+// a. IF the profile item is clicked, renders profile view.
+function renderPageFromNavbar () {
+    const navBar = document.getElementById('nav');
+
+    navBar.addEventListener('click', function(e){
+       if(event.target.id = "profile") {
+           // render profile view
+       } else if (event.target.id = "playlist") {
+           // render playlist view
+       } else if (event.target.id = "song-search") {
+           //render song search
+       } else if (event.target.id = "logout") {
+           //render logout
+       }
+    })
+
+
+}
+
+// NAV BAR PLAYLIST FUNCTIONALITY
+// a. if the playlist is clicked, renders playlist view
