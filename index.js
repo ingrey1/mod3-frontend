@@ -29,7 +29,7 @@
         // data structure 
         /*
           {  
-             play_list_id: id    
+           
             
              song_info: {
                 // song attributes
