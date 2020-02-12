@@ -1,3 +1,4 @@
+
 (() => { // application code lives inside of iffy
 
    // our base endpoints
@@ -313,7 +314,79 @@
    }
    
 
-
+   function readTextFile(file)
+   {
+       var rawFile = new XMLHttpRequest();
+       rawFile.open("GET", file, false);
+       rawFile.onreadystatechange = function ()
+       {
+           if(rawFile.readyState === 4)
+           {
+               if(rawFile.status === 200 || rawFile.status == 0)
+               {
+                   var allText = rawFile.responseText;
+                   alert(allText);
+               }
+           }
+       }
+       rawFile.send(null);
+   }
+   
+   readTextFile("file://access_token.txt");
 
 
 })()
+
+function fetchToken() {
+   const url = 
+
+}
+
+
+document.addEventListener("DOMContentLoaded", function(){
+    // fetchSongs()
+    getToken()
+})
+
+function fetchSongs() {
+    fetch("https://api.spotify.com/v1/search?q=holy%20diver&type=track&market=US&limit=10&offset=5", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/js",
+            "Authorization" : "Bearer BQBKO-2eVxxLOk8F5JB63J6A2e3vLRf6G4SamrRM5Kmcyt_LBpIcU1qytyA8GOsLP4snQEgHog6sj2kqgN_7WEysJo_NU-U5O1B7_E6saVW83z5vJud36WZwC6PL3fzY0LVspcpKyrw"
+        },
+        
+    })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    
+}
+
+function getToken() {
+
+    const client_id = '89db7931b9094c36ad60282960ba77ed'; 
+    const client_secret = '9de37d7d3c0644e9b5028c7b4f93b915';
+    fetch('https://accounts.spotify.com/api/token',{
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Basic " + client_id + ':' + client_secret
+    },
+    body: {
+        "grant_type": "client_credentials"
+    }
+
+    }).then(data => data.json()).then(jason => console.log(jason))   
+}
+// /*
+ 
+
+// get the link to that spotify url
+// put that link on our webpage, with the title of the song
+// make sure when you are not logged into spotify, clicking the link
+
+
+
+// */
