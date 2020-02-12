@@ -1,4 +1,3 @@
-var fs = require('fs');
 
 let express = require('express')
 let request = require('request')
@@ -38,10 +37,7 @@ app.get('/callback', function(req, res) {
   }
   request.post(authOptions, function(error, response, body) {
     var access_token = body.access_token
-    fs.writeFile('access_token.txt', access_token, function(err){
-      console.log(err)
-    });
-    let uri = process.env.FRONTEND_URI || 'http://localhost:3000/users/spotify_access_token'
+    let uri = process.env.FRONTEND_URI || 'http://localhost:3000/api/v1/users/spotify_access_token'
     res.redirect(uri + '?access_token=' + access_token)
   })
 })

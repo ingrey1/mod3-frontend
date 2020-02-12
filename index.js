@@ -1,29 +1,160 @@
 
 (() => { // application code lives inside of iffy
-
+   clearToken()
+   let spotifyToken = "";
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
-      signup: "http://localhost:3000/api/v1/users/signup"
+      signup: "http://localhost:3000/api/v1/users/signup",
+      addSongToPlaylist: "http://localhost:3000//api/v1/users",
+      deleteSongFromPlaylist: "http://localhost:3000//api/v1/users",
+      createPlaylist: "http://localhost:3000//api/v1/users",
+      deletePlaylist: "http://localhost:3000//api/v1/users", 
+      deleteUser: "http://localhost:3000/api/v1/users",  
+      fetchSpotifyToken: "http://localhost:3000/api/v1/users/give_access_token"
       // add new api base endpoints here
    }
-
+   // this object will have all the retrieved info:
    const currentUserInfo = {
        user: {
 
        },
-       userPlaylists: {
-         
-       }
+       playlists: [
+        {
+            "id": 1,
+            "title": "playlist1",
+            "songs": [
+                {
+                    "id": 1,
+                    "name": "songName1",
+                    "artist": "artist1",
+                    "album": "album1",
+                    "genre": "genre1",
+                    "created_at": "2020-02-11T22:21:28.840Z",
+                    "updated_at": "2020-02-11T22:21:28.840Z"
+                },
+                {
+                    "id": 6,
+                    "name": "songName6",
+                    "artist": "artist6",
+                    "album": "album6",
+                    "genre": "genre6",
+                    "created_at": "2020-02-11T22:21:28.860Z",
+                    "updated_at": "2020-02-11T22:21:28.860Z"
+                }
+            ]
+        }
+    ]
    }
 
 
    document.addEventListener('DOMContentLoaded', function(){
-
-      renderView(createLoginView(), 'login')
+    fetchToken()  
+    listForNavbarClicks()
+    renderView(createLoginView(), 'login')
+    fetchSongs()
+    
    })
 
    // methods that use fetch to communicate with our rails backend api
+
+     // delete a playlist
+
+     function deletePlaylist(playlist_id) {
+
+        const fullUrl = urls.deletePlaylist + `/${currentUserInfo.user.id}/playlists/${playlist_id}`
+        const configuration = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${retrieveToken()}` 
+            }
+        }
+
+        return fetch(fullUrl, configuration).then(resp => resp.json())
+
+     }
+
+     // create a playList
+
+     function createPlayList(data) {
+
+
+        const fullUrl = urls.createPlaylist + ` `
+
+        const configuration = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${retrieveToken()}`
+            },
+            body: JSON.stringify(data)
+        }
+
+        return fetch(fullUrl, configuration).then(resp => resp.json())
+
+
+
+     }
+
+     // delete user
+
+     function deleteUser(userId) {
+
+          const fullUrl = urls.deleteUser + `/${userId}`
+          const configuration = {
+              method: "POST",
+              headers: {
+               "Accept": "application/json",
+               "Authorization": `Bearer ${retrieveToken()}`  
+              }
+            }
+          return fetch(fullUrl, configuration).then(resp => resp.json())
+
+     }
+     
+     // delete Song from users playlist
+
+     function removeSongFromPlaylist(songId, playlist_id) {
+         fullUrl = urls.deleteSongFromPlaylist + `/${currentUserInfo.user.id}/playlists/${playlist_id}/songs/${songId}` 
+         const configuration = {
+            method: "DELETE",
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${retrieveToken()}`
+            }
+         }
+
+         return fetch(fullUrl, configuration).then(resp => resp.json())
+    }
+
+     //  add song to user's playlist
+     function addSongToPlaylist(data) {
+        // data structure 
+        /*
+          {  
+           
+            
+             song_info: {
+                // song attributes
+             }  
+        
+          }  
+        */
+        const fullUrl = urls.addSongToPlaylist + `/${currentUserInfo.user.id}/playlists/${data.play_list_id}/songs`
+
+         const configuration = {
+             method: "POST",
+             headers: {
+                 'Content-Type': 'application/json',
+                 'Accept': 'application/json',
+                 'Authorization': `Bearer ${retrieveToken()}`
+             },
+             body: JSON.stringify(data.song_info)
+         }
+         return fetch(fullUrl, configuration).then(resp => resp.json())
+     }
      
      // user login
 
@@ -65,9 +196,21 @@
        mainElement.innerHTML = ""
        mainElement.innerHTML += view
 
-       if (viewName === 'login') attachListenersForLoginView()
-       else if (viewName === 'signup') attachListenersForSignupView()
-       else if (viewName === 'welcome') attachListenersForWelcomeView()
+       if (viewName === 'login') {
+           attachListenersForLoginView()
+           toggleNavBarHidden()
+        }
+       else if (viewName === 'signup') {
+           attachListenersForSignupView()
+           toggleNavBarHidden()
+        }
+       else if (viewName === 'welcome') {
+           attachListenersForWelcomeView()
+           toggleNavBarHidden()
+        } else if (viewName === 'profile') {
+            createProfileView()
+            toggleNavBarHidden()
+        }
        // elsif view is 'signup' attach signup listeners, etc.
 
    }
@@ -123,10 +266,60 @@
    }
 
    function createWelcomeView() {
-       //debugger
+       
        return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1>`
    }
 
+
+   ///////Donny added code here:
+   function getPlaylistsFromData(userData) {
+    const arrOfPlaylists = userData["playlists"]
+    const playlistDiv = document.getElementById('playlist-div');
+    const playlistUl = document.createElement("UL");    
+    playlistDiv.appendChild(playlistUl)    
+
+    //we want just title of playlist.
+    const listOfPlaylistTitles = arrOfPlaylists.map(playlist => {
+        const playlistLi = document.createElement("LI");
+        playlistUl.appendChild(playlistLi);
+        playlistLi.innerText = playlist.title
+
+    });
+    return playlistUl;
+}
+   ////////End of Donny's code
+
+   function createProfileView() {
+       return `
+            <div id="profile-info">
+                <h1>
+                    Here is your profile info:
+                </h1>
+                
+                <p id="profile-first-name">First Name: ${currentUserInfo.user.first_name}</p>
+                <p id="profile-last-name">Last Name: ${currentUserInfo.user.last_name}</p>
+                <p id="profile-email">email address: ${currentUserInfo.user.email}</p>
+                <p>Here are your Playlists:</p>
+                <div id="playlist-div">
+                    
+                
+                </div>
+                    <div id="search-box-div">
+                    
+                    </div>
+            </div>
+       `
+   }
+
+
+   //attach listener to profile view /playlist text
+   //when user clicks on playlist, he gets directed
+   //to a playlist view.
+
+   function attachListenersForProfileView() {
+     
+
+   }
 
    // event listeners
    function attachListenersForLoginView() {
@@ -157,6 +350,10 @@
        })
 
 
+   }
+
+   function renderLoginErrors(errors) {
+           console.log(errors);
    }
 
    function attachListenersForWelcomeView() {
@@ -312,41 +509,51 @@
    function clearToken() {
        localStorage.removeItem('music_token')
    }
-   
 
-   function readTextFile(file)
-   {
-       var rawFile = new XMLHttpRequest();
-       rawFile.open("GET", file, false);
-       rawFile.onreadystatechange = function ()
-       {
-           if(rawFile.readyState === 4)
-           {
-               if(rawFile.status === 200 || rawFile.status == 0)
-               {
-                   var allText = rawFile.responseText;
-                   alert(allText);
-               }
-           }
+   //if there is a token i local storage called 'music token'
+ //then hide nav bar
+
+function toggleNavBarHidden() {
+    
+    const navBar = document.getElementById('nav')
+    
+    if(localStorage.getItem('music_token')) {
+        navBar.classList.remove('hidden');
+    } else {
+        navBar.classList.add('hidden')
+    }
+}
+
+// NAV BAR PROFILE FUNCTIONALITY
+// a. IF the profile item is clicked, renders profile view.
+function listForNavbarClicks () {
+    const navBar = document.getElementById('nav');
+
+    navBar.addEventListener('click', function(event){
+       if(event.target.id === "profile") {
+           console.log('profile clicked')
+           renderView(createProfileView(), 'profile')
+           getPlaylistsFromData(currentUserInfo)
+       } else if (event.target.id === "playlist") {
+           // render playlist view....
+       } else if (event.target.id === "song-search") {
+           //render song search...ignore for now...
+       } else if (event.target.id === "logout") {
+           //render logout
        }
-       rawFile.send(null);
-   }
-   
-   readTextFile("file://access_token.txt");
-
-
-})()
-
-function fetchToken() {
-   const url = 
+    })
+    
 
 }
 
-
-document.addEventListener("DOMContentLoaded", function(){
-    // fetchSongs()
-    getToken()
-})
+function fetchToken() {
+   const url = urls.fetchSpotifyToken;
+   fetch(url).then(data => data.json())
+   .then(data => {
+    spotifyToken = data["spotify_token"]
+    console.log(spotifyToken)
+   }).catch(err => console.log(err))
+}
 
 function fetchSongs() {
     fetch("https://api.spotify.com/v1/search?q=holy%20diver&type=track&market=US&limit=10&offset=5", {
@@ -354,7 +561,7 @@ function fetchSongs() {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/js",
-            "Authorization" : "Bearer BQBKO-2eVxxLOk8F5JB63J6A2e3vLRf6G4SamrRM5Kmcyt_LBpIcU1qytyA8GOsLP4snQEgHog6sj2kqgN_7WEysJo_NU-U5O1B7_E6saVW83z5vJud36WZwC6PL3fzY0LVspcpKyrw"
+            "Authorization" : `Bearer ${spotifyToken}`
         },
         
     })
@@ -363,23 +570,11 @@ function fetchSongs() {
     
 }
 
-function getToken() {
+})()
 
-    const client_id = '89db7931b9094c36ad60282960ba77ed'; 
-    const client_secret = '9de37d7d3c0644e9b5028c7b4f93b915';
-    fetch('https://accounts.spotify.com/api/token',{
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "Authorization": "Basic " + client_id + ':' + client_secret
-    },
-    body: {
-        "grant_type": "client_credentials"
-    }
 
-    }).then(data => data.json()).then(jason => console.log(jason))   
-}
+
+
 // /*
  
 
@@ -390,3 +585,13 @@ function getToken() {
 
 
 // */
+
+
+
+
+
+// NAV BAR PLAYLIST FUNCTIONALITY
+// a. if the playlist is clicked, renders playlist view
+
+
+
