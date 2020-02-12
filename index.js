@@ -11,9 +11,32 @@
        user: {
 
        },
-       userPlaylists: [
-         
-       ]
+       playlists: [
+        {
+            "id": 1,
+            "title": "playlist1",
+            "songs": [
+                {
+                    "id": 1,
+                    "name": "songName1",
+                    "artist": "artist1",
+                    "album": "album1",
+                    "genre": "genre1",
+                    "created_at": "2020-02-11T22:21:28.840Z",
+                    "updated_at": "2020-02-11T22:21:28.840Z"
+                },
+                {
+                    "id": 6,
+                    "name": "songName6",
+                    "artist": "artist6",
+                    "album": "album6",
+                    "genre": "genre6",
+                    "created_at": "2020-02-11T22:21:28.860Z",
+                    "updated_at": "2020-02-11T22:21:28.860Z"
+                }
+            ]
+        }
+    ]
    }
 
 
@@ -138,7 +161,7 @@
 
    ///////Donny added code here:
    function getPlaylistsFromData(userData) {
-    const arrOfPlaylists = userData["user"]["playlists"]
+    const arrOfPlaylists = userData["playlists"]
     const playlistDiv = document.getElementById('playlist-div');
     const playlistUl = document.createElement("UL");    
     playlistDiv.appendChild(playlistUl)    
@@ -146,8 +169,8 @@
     //we want just title of playlist.
     const listOfPlaylistTitles = arrOfPlaylists.map(playlist => {
         const playlistLi = document.createElement("LI");
-
-        playlistLi.appendChild(${playlist.title})
+        playlistUl.appendChild(playlistLi);
+        playlistLi.innerText = playlist.title
     });
     return playlistUl;
 }
@@ -165,7 +188,7 @@
             <p id="profile-email">email address ${currentUserInfo.user.email}</p>
             <div id="playlist-div">
             <p>Here are your Playlists:</p>
-            ${getPlaylistsFromData(userData)}
+          
             </div>
             <div id="search-box-div">
                 <p>Search Box goes here</p>
@@ -392,6 +415,7 @@ function listForNavbarClicks () {
        if(event.target.id === "profile") {
            console.log('profile clicked')
            renderView(createProfileView(), 'profile')
+           getPlaylistsFromData(currentUserInfo)
        } else if (event.target.id === "playlist") {
            // render playlist view....
        } else if (event.target.id === "song-search") {
