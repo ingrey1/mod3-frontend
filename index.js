@@ -8,14 +8,14 @@
       deleteSongFromPlayList: "http://localhost:3000//api/v1/users" 
       // add new api base endpoints here
    }
-
+   // this object will have all the retrieved info:
    const currentUserInfo = {
        user: {
 
        },
-       userPlaylists: {
+       userPlaylists: [
          
-       }
+       ]
    }
 
 
@@ -173,9 +173,50 @@
    }
 
    function createWelcomeView() {
-       //debugger
+       
        return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1>`
    }
+
+
+   ///////Donny added code here:
+   function getPlaylistsFromData(userData) {
+    const arrOfPlaylists = userData["user"]["playlists"]
+    const playlistDiv = document.getElementById('playlist-div');
+    const playlistUl = document.createElement("UL");    
+    playlistDiv.appendChild(playlistUl)    
+
+    //we want just title of playlist.
+    const listOfPlaylistTitles = arrOfPlaylists.map(playlist => {
+        const playlistLi = document.createElement("LI");
+
+        playlistLi.appendChild(${playlist.title})
+    });
+    return playlistUl;
+}
+   ////////End of Donny's code
+
+   function createProfileView() {
+       return `
+            <div id="profile-info">
+            <h1>
+                Here is your profile info:
+            </h1>
+            
+            <p id="profile-first-name">First Name ${currentUserInfo.user.first_name}</p>
+            <p id="profile-last-name">Last Name ${currentUserInfo.user.last_name}</p>
+            <p id="profile-email">email address ${currentUserInfo.user.email}</p>
+            <div id="playlist-div">
+            <p>Here are your Playlists:</p>
+            ${getPlaylistsFromData(userData)}
+            </div>
+            <div id="search-box-div">
+                <p>Search Box goes here</p>
+            </div>
+            </div>
+       `
+   }
+
+   
 
 
    // event listeners
@@ -384,26 +425,26 @@ function toggleNavBarHidden() {
     }
 }
 
-// // NAV BAR PROFILE FUNCTIONALITY
-// // a. IF the profile item is clicked, renders profile view.
-// function listForNavbarClicks () {
-//     const navBar = document.getElementById('nav');
+// NAV BAR PROFILE FUNCTIONALITY
+// a. IF the profile item is clicked, renders profile view.
+function listForNavbarClicks () {
+    const navBar = document.getElementById('nav');
 
-//     navBar.addEventListener('click', function(event){
-//        if(event.target.id === "profile") {
-//            console.log('profile clicked')
-//            renderView(createProfileView(), 'profile')
-//        } else if (event.target.id === "playlist") {
-//            // render playlist view....
-//        } else if (event.target.id === "song-search") {
-//            //render song search...ignore for now...
-//        } else if (event.target.id === "logout") {
-//            //render logout
-//        }
-//     })
+    navBar.addEventListener('click', function(event){
+       if(event.target.id === "profile") {
+           console.log('profile clicked')
+           renderView(createProfileView(), 'profile')
+       } else if (event.target.id === "playlist") {
+           // render playlist view....
+       } else if (event.target.id === "song-search") {
+           //render song search...ignore for now...
+       } else if (event.target.id === "logout") {
+           //render logout
+       }
+    })
     
 
-// }
+}
 
 // NAV BAR PLAYLIST FUNCTIONALITY
 // a. if the playlist is clicked, renders playlist view
