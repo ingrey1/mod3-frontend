@@ -221,26 +221,34 @@
    function createProfileView() {
        return `
             <div id="profile-info">
-            <h1>
-                Here is your profile info:
-            </h1>
-            
-            <p id="profile-first-name">First Name ${currentUserInfo.user.first_name}</p>
-            <p id="profile-last-name">Last Name ${currentUserInfo.user.last_name}</p>
-            <p id="profile-email">email address ${currentUserInfo.user.email}</p>
-            <div id="playlist-div">
-            <p>Here are your Playlists:</p>
-          
-            </div>
-            <div id="search-box-div">
-                <p>Search Box goes here</p>
-            </div>
+                <h1>
+                    Here is your profile info:
+                </h1>
+                
+                <p id="profile-first-name">First Name: ${currentUserInfo.user.first_name}</p>
+                <p id="profile-last-name">Last Name: ${currentUserInfo.user.last_name}</p>
+                <p id="profile-email">email address: ${currentUserInfo.user.email}</p>
+                <p>Here are your Playlists:</p>
+                <div id="playlist-div">
+                    
+                
+                </div>
+                    <div id="search-box-div">
+                    
+                    </div>
             </div>
        `
    }
 
-   
 
+   //attach listener to profile view /playlist text
+   //when user clicks on playlist, he gets directed
+   //to a playlist view.
+
+   function attachListenersForProfileView() {
+     
+
+   }
 
    // event listeners
    function attachListenersForLoginView() {
@@ -271,6 +279,10 @@
        })
 
 
+   }
+
+   function renderLoginErrors(errors) {
+           console.log(errors);
    }
 
    function attachListenersForWelcomeView() {
@@ -426,15 +438,8 @@
    function clearToken() {
        localStorage.removeItem('music_token')
    }
-   
 
-
-
-
-})()
-
-
-//if there is a token i local storage called 'music token'
+   //if there is a token i local storage called 'music token'
  //then hide nav bar
 
 function toggleNavBarHidden() {
@@ -469,6 +474,15 @@ function listForNavbarClicks () {
     
 
 }
+   
+
+
+
+
+})()
+
+
+
 
 // NAV BAR PLAYLIST FUNCTIONALITY
 // a. if the playlist is clicked, renders playlist view
