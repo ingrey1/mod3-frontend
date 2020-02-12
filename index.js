@@ -48,6 +48,7 @@
    document.addEventListener('DOMContentLoaded', function(){
       listForNavbarClicks()
       renderView(createLoginView(), 'login')
+      attachListenersForProfileView()
    })
 
    // methods that use fetch to communicate with our rails backend api
@@ -275,6 +276,7 @@
     //we want just title of playlist.
     const listOfPlaylistTitles = arrOfPlaylists.map(playlist => {
         const playlistLi = document.createElement("LI");
+        playlistLi.classList.add('playlist-name')
         playlistUl.appendChild(playlistLi);
         playlistLi.innerText = playlist.title
 
@@ -305,13 +307,33 @@
        `
    }
 
+   function renderPlaylistView() {
+       return `
+         <div id="playlist-viewPage">
+           <h1>Here is a list of the Songs on your playlist</h1>
+             <div id="playlist-songs">
+              <p>Interate through playlist songs and print out each song here</p>
+             </div>
+         </div>  
+       `
+   }
+  
 
    //attach listener to profile view /playlist text
    //when user clicks on playlist, he gets directed
    //to a playlist view.
 
    function attachListenersForProfileView() {
+     const playlistName = document.getElementsByClassName('playlist-name');
+     debugger
      
+     //navBar.removeEventListener('click', listForNavbarClicks)
+     playlistName.addEventListener('click', function(){
+         console.log("playlistUl has been clicked!")
+        //  const playlistClickedOn = e.target;
+        //  const playlistTitle = playlistClickedOn.innerText  //get the text of playlist title
+         // pass in renderProfileView function with variable playlistTitle passed in as an parameter
+     });
 
    }
 
@@ -529,7 +551,7 @@ function listForNavbarClicks () {
            renderView(createProfileView(), 'profile')
            getPlaylistsFromData(currentUserInfo)
        } else if (event.target.id === "playlist") {
-           // render playlist view....
+           renderPlaylistView()
        } else if (event.target.id === "song-search") {
            //render song search...ignore for now...
        } else if (event.target.id === "logout") {
