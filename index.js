@@ -242,6 +242,17 @@
        `
    }
 
+   function renderPlaylistView() {
+       return `
+         <div id="playlist-viewPage">
+           <h1>Here is a list of the Songs on your playlist</h1>
+             <div id="playlist-songs">
+              <p>Interate through playlist songs and print out each song here</p>
+             </div>
+         </div>  
+       `
+   }
+  
 
    //attach listener to profile view /playlist text
    //when user clicks on playlist, he gets directed
@@ -475,7 +486,7 @@ function listForNavbarClicks () {
            renderView(createProfileView(), 'profile')
            getPlaylistsFromData(currentUserInfo)
        } else if (event.target.id === "playlist") {
-           // render playlist view....
+           renderPlaylistView()
        } else if (event.target.id === "song-search") {
            //render song search...ignore for now...
        } else if (event.target.id === "logout") {
