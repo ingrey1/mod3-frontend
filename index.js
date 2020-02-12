@@ -1,5 +1,7 @@
+
 (() => { // application code lives inside of iffy
    clearToken()
+   let spotifyToken = "";
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
@@ -8,7 +10,8 @@
       deleteSongFromPlaylist: "http://localhost:3000//api/v1/users",
       createPlaylist: "http://localhost:3000//api/v1/users",
       deletePlaylist: "http://localhost:3000//api/v1/users", 
-      deleteUser: "http://localhost:3000/api/v1/users"  
+      deleteUser: "http://localhost:3000/api/v1/users",  
+      fetchSpotifyToken: "http://localhost:3000/api/v1/users/give_access_token"
       // add new api base endpoints here
    }
    // this object will have all the retrieved info:
@@ -46,9 +49,13 @@
 
 
    document.addEventListener('DOMContentLoaded', function(){
-      listForNavbarClicks()
-      renderView(createLoginView(), 'login')
-      attachListenersForProfileView()
+
+    fetchToken()  
+    listForNavbarClicks()
+    renderView(createLoginView(), 'login')
+    fetchSongs()
+    
+
    })
 
    // methods that use fetch to communicate with our rails backend api
@@ -561,15 +568,53 @@ function listForNavbarClicks () {
     
 
 }
-   
 
+function fetchToken() {
+   const url = urls.fetchSpotifyToken;
+   fetch(url).then(data => data.json())
+   .then(data => {
+    spotifyToken = data["spotify_token"]
+    console.log(spotifyToken)
+   }).catch(err => console.log(err))
+}
 
-
+function fetchSongs() {
+    fetch("https://api.spotify.com/v1/search?q=holy%20diver&type=track&market=US&limit=10&offset=5", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/js",
+            "Authorization" : `Bearer ${spotifyToken}`
+        },
+        
+    })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    
+}
 
 })()
 
 
 
 
+// /*
+ 
+
+// get the link to that spotify url
+// put that link on our webpage, with the title of the song
+// make sure when you are not logged into spotify, clicking the link
+
+
+
+// */
+
+
+
+
+
 // NAV BAR PLAYLIST FUNCTIONALITY
 // a. if the playlist is clicked, renders playlist view
+
+
+
