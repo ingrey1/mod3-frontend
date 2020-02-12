@@ -6,7 +6,9 @@
       signup: "http://localhost:3000/api/v1/users/signup",
       addSongToPlaylist: "http://localhost:3000//api/v1/users",
       deleteSongFromPlaylist: "http://localhost:3000//api/v1/users",
-      createPlaylist: "http://localhost:3000//api/v1/users"  
+      createPlaylist: "http://localhost:3000//api/v1/users",
+      deletePlaylist: "http://localhost:3000//api/v1/users", 
+      deleteUser: "http://localhost:3000/api/v1/users"  
       // add new api base endpoints here
    }
    // this object will have all the retrieved info:
@@ -27,6 +29,23 @@
 
    // methods that use fetch to communicate with our rails backend api
 
+     // delete a playlist
+
+     function deletePlaylist(playlist_id) {
+
+        const fullUrl = urls.deletePlaylist + `/${currentUserInfo.user.id}/playlists/${playlist_id}`
+        const configuration = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${retrieveToken()}` 
+            }
+        }
+
+        return fetch(fullUrl, configuration).then(resp => resp.json())
+
+     }
+
      // create a playList
 
      function createPlayList(data) {
@@ -38,25 +57,43 @@
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${retrieveToken()}`
             },
             body: JSON.stringify(data)
         }
 
-        
+        return fetch(fullUrl, configuration).then(resp => resp.json())
 
 
+
+     }
+
+     // delete user
+
+     function deleteUser(userId) {
+
+          const fullUrl = urls.deleteUser + `/${userId}`
+          const configuration = {
+              method: "POST",
+              headers: {
+               "Accept": "application/json",
+               "Authorization": `Bearer ${retrieveToken()}`  
+              }
+            }
+          return fetch(fullUrl, configuration).then(resp => resp.json())
 
      }
      
      // delete Song from users playlist
 
-     function removeSongFromPlaylist(songId) {
-         fullUrl = urls.deleteSongFromPlaylist + `/${currentUserInfo.user.id}/playlists/${data.play_list.id}/songs/${songId}` 
+     function removeSongFromPlaylist(songId, playlist_id) {
+         fullUrl = urls.deleteSongFromPlaylist + `/${currentUserInfo.user.id}/playlists/${playlist_id}/songs/${songId}` 
          const configuration = {
             method: "DELETE",
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${retrieveToken()}`
             }
          }
 
@@ -82,7 +119,8 @@
              method: "POST",
              headers: {
                  'Content-Type': 'application/json',
-                 'Accept': 'application/json'
+                 'Accept': 'application/json',
+                 'Authorization': `Bearer ${retrieveToken()}`
              },
              body: JSON.stringify(data.song_info)
          }
@@ -140,6 +178,9 @@
        else if (viewName === 'welcome') {
            attachListenersForWelcomeView()
            toggleNavBarHidden()
+        } else if (viewName === 'profile') {
+            createProfileView()
+            toggleNavBarHidden()
         }
        // elsif view is 'signup' attach signup listeners, etc.
 
@@ -212,7 +253,7 @@
     const listOfPlaylistTitles = arrOfPlaylists.map(playlist => {
         const playlistLi = document.createElement("LI");
 
-        playlistLi.appendChild(${playlist.title})
+        playlistLi.appendChild(playlist.title)
     });
     return playlistUl;
 }
