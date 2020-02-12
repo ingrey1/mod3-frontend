@@ -5,7 +5,8 @@
       login: "http://localhost:3000/api/v1/users/login",
       signup: "http://localhost:3000/api/v1/users/signup",
       addSongToPlaylist: "http://localhost:3000//api/v1/users",
-      deleteSongFromPlayList: "http://localhost:3000//api/v1/users" 
+      deleteSongFromPlaylist: "http://localhost:3000//api/v1/users",
+      createPlaylist: "http://localhost:3000//api/v1/users"  
       // add new api base endpoints here
    }
 
@@ -25,11 +26,33 @@
    })
 
    // methods that use fetch to communicate with our rails backend api
+
+     // create a playList
+
+     function createPlayList(data) {
+
+
+        const fullUrl = urls.createPlaylist + ` `
+
+        const configuration = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        
+
+
+
+     }
      
-     // deleteSong from users playlist
+     // delete Song from users playlist
 
      function removeSongFromPlaylist(songId) {
-         fullUrl = urls.deleteSongFromPlayList + `/${currentUserInfo.user.id}/playlists/${data.play_list.id}/songs/${songId}` 
+         fullUrl = urls.deleteSongFromPlaylist + `/${currentUserInfo.user.id}/playlists/${data.play_list.id}/songs/${songId}` 
          const configuration = {
             method: "DELETE",
             headers: {
