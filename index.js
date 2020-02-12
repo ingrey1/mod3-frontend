@@ -1,11 +1,17 @@
+
 (() => { // application code lives inside of iffy
    clearToken()
+   let spotifyToken = "";
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
       signup: "http://localhost:3000/api/v1/users/signup",
       addSongToPlaylist: "http://localhost:3000//api/v1/users",
-      deleteSongFromPlayList: "http://localhost:3000//api/v1/users" 
+      deleteSongFromPlaylist: "http://localhost:3000//api/v1/users",
+      createPlaylist: "http://localhost:3000//api/v1/users",
+      deletePlaylist: "http://localhost:3000//api/v1/users", 
+      deleteUser: "http://localhost:3000/api/v1/users",  
+      fetchSpotifyToken: "http://localhost:3000/api/v1/users/give_access_token"
       // add new api base endpoints here
    }
    // this object will have all the retrieved info:
@@ -43,21 +49,83 @@
 
 
    document.addEventListener('DOMContentLoaded', function(){
-      listForNavbarClicks()
-      renderView(createLoginView(), 'login')
-      
+
+    fetchToken()  
+    listForNavbarClicks()
+    renderView(createLoginView(), 'login')
+    fetchSongs()
+    
+
+
    })
 
    // methods that use fetch to communicate with our rails backend api
-     
-     // deleteSong from users playlist
 
-     function removeSongFromPlaylist(songId) {
-         fullUrl = urls.deleteSongFromPlayList + `/${currentUserInfo.user.id}/playlists/${data.play_list.id}/songs/${songId}` 
+     // delete a playlist
+
+     function deletePlaylist(playlist_id) {
+
+        const fullUrl = urls.deletePlaylist + `/${currentUserInfo.user.id}/playlists/${playlist_id}`
+        const configuration = {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Authorization": `Bearer ${retrieveToken()}` 
+            }
+        }
+
+        return fetch(fullUrl, configuration).then(resp => resp.json())
+
+     }
+
+     // create a playList
+
+     function createPlayList(data) {
+
+
+        const fullUrl = urls.createPlaylist + ` `
+
+        const configuration = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${retrieveToken()}`
+            },
+            body: JSON.stringify(data)
+        }
+
+        return fetch(fullUrl, configuration).then(resp => resp.json())
+
+
+
+     }
+
+     // delete user
+
+     function deleteUser(userId) {
+
+          const fullUrl = urls.deleteUser + `/${userId}`
+          const configuration = {
+              method: "POST",
+              headers: {
+               "Accept": "application/json",
+               "Authorization": `Bearer ${retrieveToken()}`  
+              }
+            }
+          return fetch(fullUrl, configuration).then(resp => resp.json())
+
+     }
+     
+     // delete Song from users playlist
+
+     function removeSongFromPlaylist(songId, playlist_id) {
+         fullUrl = urls.deleteSongFromPlaylist + `/${currentUserInfo.user.id}/playlists/${playlist_id}/songs/${songId}` 
          const configuration = {
             method: "DELETE",
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${retrieveToken()}`
             }
          }
 
@@ -83,7 +151,8 @@
              method: "POST",
              headers: {
                  'Content-Type': 'application/json',
-                 'Accept': 'application/json'
+                 'Accept': 'application/json',
+                 'Authorization': `Bearer ${retrieveToken()}`
              },
              body: JSON.stringify(data.song_info)
          }
@@ -142,6 +211,7 @@
            attachListenersForWelcomeView()
            toggleNavBarHidden()
         } else if (viewName === 'profile') {
+            createProfileView()
             attachListenersForProfileView()
             toggleNavBarHidden()
         }
@@ -218,6 +288,7 @@
         playlistLi.classList.add('playlist-name')
         playlistUl.appendChild(playlistLi);
         playlistLi.innerText = playlist.title
+
     });
     return playlistUl;
 }
@@ -502,15 +573,53 @@ function listForNavbarClicks () {
     
 
 }
-   
 
+function fetchToken() {
+   const url = urls.fetchSpotifyToken;
+   fetch(url).then(data => data.json())
+   .then(data => {
+    spotifyToken = data["spotify_token"]
+    console.log(spotifyToken)
+   }).catch(err => console.log(err))
+}
 
-
+function fetchSongs() {
+    fetch("https://api.spotify.com/v1/search?q=holy%20diver&type=track&market=US&limit=10&offset=5", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/js",
+            "Authorization" : `Bearer ${spotifyToken}`
+        },
+        
+    })
+    .then(res => res.json())
+    .then(data => console.log(data))
+    
+}
 
 })()
 
 
 
 
+// /*
+ 
+
+// get the link to that spotify url
+// put that link on our webpage, with the title of the song
+// make sure when you are not logged into spotify, clicking the link
+
+
+
+// */
+
+
+
+
+
 // NAV BAR PLAYLIST FUNCTIONALITY
 // a. if the playlist is clicked, renders playlist view
+
+
+
