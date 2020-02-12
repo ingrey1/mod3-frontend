@@ -45,7 +45,7 @@
    document.addEventListener('DOMContentLoaded', function(){
       listForNavbarClicks()
       renderView(createLoginView(), 'login')
-      attachListenersForProfileView()
+      
    })
 
    // methods that use fetch to communicate with our rails backend api
@@ -141,8 +141,11 @@
        else if (viewName === 'welcome') {
            attachListenersForWelcomeView()
            toggleNavBarHidden()
+        } else if (viewName === 'profile') {
+            attachListenersForProfileView()
+            toggleNavBarHidden()
         }
-       // elsif view is 'signup' attach signup listeners, etc.
+        //elsif view is 'signup' attach signup listeners, etc.
 
    }
    // methods used to create the 'views' - e.g., the signup page, the login page, the playlist page etc.   
@@ -259,14 +262,15 @@
    //to a playlist view.
 
    function attachListenersForProfileView() {
-     const playlistName = document.getElementsByClassName('playlist-name');
-     debugger
+     const playlistName = document.querySelector('#playlist-div');
+     
      
      //navBar.removeEventListener('click', listForNavbarClicks)
-     playlistName.addEventListener('click', function(){
+     playlistName.addEventListener('click', function(e){
          console.log("playlistUl has been clicked!")
-        //  const playlistClickedOn = e.target;
-        //  const playlistTitle = playlistClickedOn.innerText  //get the text of playlist title
+         const playlistClickedOnText = e.target.textContent;
+         
+       
          // pass in renderProfileView function with variable playlistTitle passed in as an parameter
      });
 
@@ -485,6 +489,8 @@ function listForNavbarClicks () {
            console.log('profile clicked')
            renderView(createProfileView(), 'profile')
            getPlaylistsFromData(currentUserInfo)
+          
+
        } else if (event.target.id === "playlist") {
            renderPlaylistView()
        } else if (event.target.id === "song-search") {
