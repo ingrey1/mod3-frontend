@@ -1,5 +1,5 @@
 (() => { // application code lives inside of iffy
-
+   clearToken()
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
@@ -9,19 +9,19 @@
       createPlaylist: "http://localhost:3000//api/v1/users"  
       // add new api base endpoints here
    }
-
+   // this object will have all the retrieved info:
    const currentUserInfo = {
        user: {
 
        },
-       userPlaylists: {
+       userPlaylists: [
          
-       }
+       ]
    }
 
 
    document.addEventListener('DOMContentLoaded', function(){
-
+      listForNavbarClicks()
       renderView(createLoginView(), 'login')
    })
 
@@ -129,9 +129,18 @@
        mainElement.innerHTML = ""
        mainElement.innerHTML += view
 
-       if (viewName === 'login') attachListenersForLoginView()
-       else if (viewName === 'signup') attachListenersForSignupView()
-       else if (viewName === 'welcome') attachListenersForWelcomeView()
+       if (viewName === 'login') {
+           attachListenersForLoginView()
+           toggleNavBarHidden()
+        }
+       else if (viewName === 'signup') {
+           attachListenersForSignupView()
+           toggleNavBarHidden()
+        }
+       else if (viewName === 'welcome') {
+           attachListenersForWelcomeView()
+           toggleNavBarHidden()
+        }
        // elsif view is 'signup' attach signup listeners, etc.
 
    }
@@ -187,9 +196,50 @@
    }
 
    function createWelcomeView() {
-       //debugger
+       
        return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1>`
    }
+
+
+   ///////Donny added code here:
+   function getPlaylistsFromData(userData) {
+    const arrOfPlaylists = userData["user"]["playlists"]
+    const playlistDiv = document.getElementById('playlist-div');
+    const playlistUl = document.createElement("UL");    
+    playlistDiv.appendChild(playlistUl)    
+
+    //we want just title of playlist.
+    const listOfPlaylistTitles = arrOfPlaylists.map(playlist => {
+        const playlistLi = document.createElement("LI");
+
+        playlistLi.appendChild(${playlist.title})
+    });
+    return playlistUl;
+}
+   ////////End of Donny's code
+
+   function createProfileView() {
+       return `
+            <div id="profile-info">
+            <h1>
+                Here is your profile info:
+            </h1>
+            
+            <p id="profile-first-name">First Name ${currentUserInfo.user.first_name}</p>
+            <p id="profile-last-name">Last Name ${currentUserInfo.user.last_name}</p>
+            <p id="profile-email">email address ${currentUserInfo.user.email}</p>
+            <div id="playlist-div">
+            <p>Here are your Playlists:</p>
+            ${getPlaylistsFromData(userData)}
+            </div>
+            <div id="search-box-div">
+                <p>Search Box goes here</p>
+            </div>
+            </div>
+       `
+   }
+
+   
 
 
    // event listeners
@@ -382,3 +432,42 @@
 
 
 })()
+
+
+//if there is a token i local storage called 'music token'
+ //then hide nav bar
+
+function toggleNavBarHidden() {
+    
+    const navBar = document.getElementById('nav')
+    
+    if(localStorage.getItem('music_token')) {
+        navBar.classList.remove('hidden');
+    } else {
+        navBar.classList.add('hidden')
+    }
+}
+
+// NAV BAR PROFILE FUNCTIONALITY
+// a. IF the profile item is clicked, renders profile view.
+function listForNavbarClicks () {
+    const navBar = document.getElementById('nav');
+
+    navBar.addEventListener('click', function(event){
+       if(event.target.id === "profile") {
+           console.log('profile clicked')
+           renderView(createProfileView(), 'profile')
+       } else if (event.target.id === "playlist") {
+           // render playlist view....
+       } else if (event.target.id === "song-search") {
+           //render song search...ignore for now...
+       } else if (event.target.id === "logout") {
+           //render logout
+       }
+    })
+    
+
+}
+
+// NAV BAR PLAYLIST FUNCTIONALITY
+// a. if the playlist is clicked, renders playlist view
