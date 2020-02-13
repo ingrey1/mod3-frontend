@@ -64,8 +64,8 @@
 
     //fetchToken()  
     listForNavbarClicks()
-    if (retrieveToken()) getAllUserData().then(data => console.log(data)).then(() => renderView(createWelcomeView(), 'welcome'))
-    else renderView(createLoginView(), 'login')
+    
+    renderView(createLoginView(), 'login')
 
 
     //()
