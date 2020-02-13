@@ -216,6 +216,10 @@
             createProfileView()
             attachListenersForProfileView()
             toggleNavBarHidden()
+        } else if (viewName === 'playlist') {
+            //attachListenersForPlaylistView
+            toggleNavBarHidden()
+
         }
         //elsif view is 'signup' attach signup listeners, etc.
 
@@ -329,15 +333,16 @@
     //  playlist.songs[0].genre
     playlist.songs.forEach(song => {
         //get playlist div, make ul plus li for each song
-        playListHTML += `<ul>
-                           <li>${playlist.songs[song].name}</li>
-                           <li>${playlist.songs[song].artist}</li>
-                           <li>${playlist.songs[song].album}</li>
-                           <li>${playlist.songs[song].genre}</li>
-                         </ul>
+        playListHTML += `
+                            <ul class="playlist-ul">
+                                <li>Song name: ${song.name}</li>
+                                <li>Song artist: ${song.artist}</li>
+                                <li>Album name: ${song.album}</li>
+                                <li>Genre: ${song.genre}</li>
+                            </ul>                   
                         `
     })
-
+     
     return playListHTML
   }
   
@@ -356,7 +361,7 @@
              return playlist.id === playlistClickedOnId;
          })
          
-         renderPlaylistView(playlist)
+         renderView(renderPlaylistView(playlist), "playlist")
      });
      const deleteUserButton = document.querySelector("#delete-user")
     
