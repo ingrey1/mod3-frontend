@@ -326,12 +326,15 @@
         arrOfPlaylists.forEach(playlist => {
             newPlaylistHTML += `
                          <div id="${playlist.id}">
-                        <!-- add delete button -->
+                        
                          <h2>${playlist.title}</h2>
                            <ul id="song-ul">
                            
                            ${playlistSongsHTML(playlist.songs)}
                            </ul>
+                        
+                         
+                         <button type="button" id="delete-button">Delete this Playlist</button>
                          </div>
                          `
                 //   arrOfPlaylists.songs.forEach(song => {
