@@ -4,7 +4,8 @@
   "description": "Javascript frontend for Music App",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +22,10 @@
     "mocha-jsdom": "~1.1.0",
     "mocha-multi": "1.0.1",
     "querystring": "~0.2.0",
-    "request": "~2.83.0"
+    "request": "~2.83.0",
+    "spotify-web-api-js": "^0.22.1"
+  },
+  "dependencies": {
+    "query-string": "^6.11.0"
   }
 }

@@ -2,6 +2,9 @@
 (() => { // application code lives inside of iffy
    clearToken()
    let spotifyToken = "";
+//    const queryString = require('query-string');
+//    const parsed = queryString.parse(location.search);
+
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
@@ -19,6 +22,11 @@
        user: {
 
        },
+       tracks: [
+           {
+
+       }
+    ],
        playlists: [
         {
             "id": 1,
@@ -217,7 +225,9 @@
    // methods used to create the 'views' - e.g., the signup page, the login page, the playlist page etc.   
    function createLoginView() {
 
-       return `<div class="grid-item hidden"></div>
+       return `
+
+                <div class="grid-item hidden"></div>
                <div id="login-div" class="grid-item">
                 <h2>Login</h2> 
                <form id="login-form">
@@ -503,11 +513,12 @@
    }
 
    function retrieveToken() {
-       localStorage.getItem('music_token')
+       return localStorage.getItem('music_token')
    }
 
    function clearToken() {
-       localStorage.removeItem('music_token')
+       if (retrieveToken()) {
+       localStorage.removeItem('music_token')}
    }
 
    //if there is a token i local storage called 'music token'
@@ -546,6 +557,7 @@ function listForNavbarClicks () {
 
 }
 
+
 function fetchToken() {
    const url = urls.fetchSpotifyToken;
    fetch(url).then(data => data.json())
@@ -555,19 +567,47 @@ function fetchToken() {
    }).catch(err => console.log(err))
 }
 
+function renderAllSearchSongs(songs) {
+    const songCollection = document.getElementById("song-search")
+    songs.forEach(function(song) {
+    songCollection.innerHTML += renderaSearchSong(song)
+  })
+}
+function renderASearchSong(song) {
+    return `
+    <div id="song-search">
+        <h1>
+            Songs
+        </h1>
+        
+        <p id="song-image"> ${currentUserInfo.user.first_name}</p>
+        <p id="profile-last-name">Last Name: ${currentUserInfo.user.last_name}</p>
+        <p id="profile-email">email address: ${currentUserInfo.user.email}</p>
+        <p>Here are your Playlists:</p>
+        <div id="playlist-div">
+            
+        
+        </div>
+            <div id="search-box-div">
+            
+            </div>
+    </div>
+`
+}
+}
+
 function fetchSongs() {
     fetch("https://api.spotify.com/v1/search?q=holy%20diver&type=track&market=US&limit=10&offset=5", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/js",
-            "Authorization" : `Bearer ${spotifyToken}`
+            "Authorization" : "Bearer BQB1w9zs5COdFvcaZF16oE-3GBggCL1JJv9eKb55LVDfhhQKwTlj9TGpqVwF-Fn9dSEVE_vkuiICxorR4q5ascVsjxcu3iM3S1f0Gsxe7X2yXb1BxMseZiIZag28DZy7xwZ_tubNQ3bjyLAleACkA0OnYXJr-cqR2_4"
         },
         
     })
     .then(res => res.json())
     .then(data => console.log(data))
-    
 }
 
 })()
