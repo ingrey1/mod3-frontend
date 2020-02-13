@@ -2,6 +2,7 @@
 (() => { // application code lives inside of iffy
    clearToken()
    let spotifyToken = "";
+   let addSong
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
@@ -22,6 +23,8 @@
 
        songs: [{
            id: 7,
+           album_url: "https://i.scdn.co/image/ab67616d000048517645656d7c2dc87d84204986",
+           artist: "amazing artist",
            title: "Holy Diver",
            url: "https://open.spotify.com/embed/album/2jVdrR7UYTElDAciwt6qu7?highlight=spotify:track:1mHXSQFVH2wp9YbgJARO0e"
        }],
@@ -57,7 +60,7 @@
 
    document.addEventListener('DOMContentLoaded', function(){
 
-    //fetchToken()  
+    fetchToken()  
     listForNavbarClicks()
     renderView(createLoginView(), 'login')
     //()
@@ -223,7 +226,12 @@
     function createSongsList() {
         let songLis = ""
         currentUserInfo.songs.forEach((song) => {
-            songLis += `<li id="${song.id}">${song.title}</li>`
+            songLis += `<li id="${song.id}">
+            <img src="${song.album_url}" />
+            <h3>${song.title}</h3>
+            <h5>${song.artist}</h5>
+            <button>Add to a Playlist</button>
+            </li>`
         })
         return songLis
     }
@@ -387,11 +395,15 @@
        // listener for clicking on a new song in the list
        const songsList = document.querySelector("#songs-list")
        songsList.addEventListener('click', function(e){
-            const songId = parseInt(e.target.id)
-            const song = currentUserInfo.songs.find((song) => song.id === songId)
-            
-            // empty iframe div, replace with new iframe for this song
-            renderSongIFrame(createSongIFrameHTML(song))
+            if (e.target.tagName === 'IMG') {
+                const songId = parseInt(e.target.parentElement.id)
+                const song = currentUserInfo.songs.find((song) => song.id === songId)
+                
+                // empty iframe div, replace with new iframe for this song
+                renderSongIFrame(createSongIFrameHTML(song))
+
+            }
+          
        })
    }
 
