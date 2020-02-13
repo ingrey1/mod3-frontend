@@ -50,10 +50,10 @@
 
    document.addEventListener('DOMContentLoaded', function(){
 
-    fetchToken()  
+    //fetchToken()  
     listForNavbarClicks()
     renderView(createLoginView(), 'login')
-    fetchSongs()
+    //()
     
 
 
@@ -104,10 +104,12 @@
      // delete user
 
      function deleteUser(userId) {
-
+          
+         //debugger
+          
           const fullUrl = urls.deleteUser + `/${userId}`
           const configuration = {
-              method: "POST",
+              method: "DELETE",
               headers: {
                "Accept": "application/json",
                "Authorization": `Bearer ${retrieveToken()}`  
@@ -300,6 +302,7 @@
                 <h1>
                     Here is your profile info:
                 </h1>
+                <button id="delete-user">Delete Account</button>
                 
                 <p id="profile-first-name">First Name: ${currentUserInfo.user.first_name}</p>
                 <p id="profile-last-name">Last Name: ${currentUserInfo.user.last_name}</p>
@@ -343,8 +346,21 @@
          
        
          // pass in renderProfileView function with variable playlistTitle passed in as an parameter
-     });
-
+     
+      
+    });
+    // attach listener for delete button
+    const deleteUserButton = document.querySelector("#delete-user")
+    
+    deleteUserButton.addEventListener('click', function(){
+        
+        deleteUser(currentUserInfo.user.id).then(() => {
+            clearToken()
+            renderView(createLoginView(), 'login')
+        })
+       
+    })   
+        
    }
 
    // event listeners
@@ -361,9 +377,13 @@
            postLogin(userDataObject).then(data =>{
                    if (data && data.errors) renderLoginErrors(data.errors)
                    else { // no errors, so user will have jwt token, and data
-                     saveToken(data.token)
+                    
+                    saveToken(data.token)
+            
                      saveAllUserDataLocally(data, false)
+                    
                      renderView(createWelcomeView(), 'welcome')
+                     
                    }
            } )
 
@@ -529,7 +549,7 @@
    }
 
    function retrieveToken() {
-       localStorage.getItem('music_token')
+       return localStorage.getItem('music_token')
    }
 
    function clearToken() {
