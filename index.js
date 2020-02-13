@@ -19,6 +19,13 @@
        user: {
 
        },
+
+       songs: [{
+           id: 7,
+           title: "Holy Diver",
+           url: "https://open.spotify.com/embed/album/2jVdrR7UYTElDAciwt6qu7?highlight=spotify:track:1mHXSQFVH2wp9YbgJARO0e"
+       }],
+       
        playlists: [
         {
             "id": 1,
@@ -105,7 +112,7 @@
 
      function deleteUser(userId) {
           
-         //debugger
+         
           
           const fullUrl = urls.deleteUser + `/${userId}`
           const configuration = {
@@ -136,17 +143,7 @@
 
      //  add song to user's playlist
      function addSongToPlaylist(data) {
-        // data structure 
-        /*
-          {  
-           
-            
-             song_info: {
-                // song attributes
-             }  
-        
-          }  
-        */
+     
         const fullUrl = urls.addSongToPlaylist + `/${currentUserInfo.user.id}/playlists/${data.play_list_id}/songs`
 
          const configuration = {
@@ -196,7 +193,7 @@
 
    // methods used to render the 'view' or 'view' elements
    function renderView(view, viewName) {
-      
+       
        const mainElement = document.querySelector("#main")
        mainElement.innerHTML = ""
        mainElement.innerHTML += view
@@ -213,14 +210,39 @@
            attachListenersForWelcomeView()
            toggleNavBarHidden()
         } else if (viewName === 'profile') {
-            createProfileView()
             attachListenersForProfileView()
+            toggleNavBarHidden()
+        } else if (viewName === 'songs') {
+            attachListenersForSongsView()
             toggleNavBarHidden()
         }
         //elsif view is 'signup' attach signup listeners, etc.
 
    }
-   // methods used to create the 'views' - e.g., the signup page, the login page, the playlist page etc.   
+   // methods used to create the 'views' - e.g., the signup page, the login page, the playlist page etc. 
+    function createSongsList() {
+        let songLis = ""
+        currentUserInfo.songs.forEach((song) => {
+            songLis += `<li id="${song.id}">${song.title}</li>`
+        })
+        return songLis
+    }
+   function createSongsView() {
+
+       return `<div id="song-view">
+
+              <h1>Songs</h1>
+       
+               <div class="songs-container">
+                 <ul id="songs-list">${createSongsList()}</ul>
+               </div>
+               <div id="song-iframe">
+                   
+               </div>
+              </div>
+       `
+   }
+
    function createLoginView() {
 
        return `<div class="grid-item hidden"></div>
@@ -331,10 +353,10 @@
     playlist.songs.forEach(song => {
         //get playlist div, make ul plus li for each song
         playListHTML += `<ul>
-                           <li>${playlist.songs[song].name}</li>
-                           <li>${playlist.songs[song].artist}</li>
-                           <li>${playlist.songs[song].album}</li>
-                           <li>${playlist.songs[song].genre}</li>
+                           <li>${song.name}</li>
+                           <li>${song.artist}</li>
+                           <li>${song.album}</li>
+                           <li>${song.genre}</li>
                          </ul>
                         `
     })
@@ -342,10 +364,36 @@
     return playListHTML
   }
   
+  function createSongIFrameHTML(song) {
+      return `<iframe src="${song.url}" class="song-play-style"></iframe>`
+
+  }
+
+  function renderSongIFrame(iframe) {
+
+      
+      const iframeContainer = document.querySelector("#song-iframe")
+      iframeContainer.innerHTML = ""
+      iframeContainer.innerHTML = iframe
+
+  }
 
    //attach listener to profile view /playlist text
    //when user clicks on playlist, he gets directed
    //to a playlist view.
+
+
+   function attachListenersForSongsView() {
+       // listener for clicking on a new song in the list
+       const songsList = document.querySelector("#songs-list")
+       songsList.addEventListener('click', function(e){
+            const songId = parseInt(e.target.id)
+            const song = currentUserInfo.songs.find((song) => song.id === songId)
+            
+            // empty iframe div, replace with new iframe for this song
+            renderSongIFrame(createSongIFrameHTML(song))
+       })
+   }
 
    function attachListenersForProfileView() {
      const playlistName = document.querySelector('#playlist-div');
@@ -451,13 +499,13 @@
          // handle errors
         
        
-         //debugger
+         
         
         
-                //debugger       
+                       
                 postSignup(userData).then(userData => {
                     clearToken()
-                    debugger
+                    
                     if (userData && userData.errors) renderSignupErrors(userData.errors)
                     else {
                         saveToken(userData.token)
@@ -501,7 +549,7 @@
    // validation methods
    function renderSignupErrors(errors) {
     const errorDiv = document.querySelector("#signup-errors")
-       //debugger
+       
        if (errors.length > 0) {
           // display errors
           errorDiv.innerHTML = "There are errors for these fields: "
@@ -511,7 +559,7 @@
             }, "" ) 
             //
             
-          //debugger
+          
           setTimeout(() => {
             // clear the error display
             errorDiv.innerHTML = ""
@@ -533,7 +581,7 @@
     if (!validPassword(data.user_info.password)) errors.push('Password')
     if (!validPasswordConfirmation(data.user_info.password, data.user_info.password_confirmation)) errors.push('Password')
 
-     //debugger
+     
     return errors
 
          
@@ -606,9 +654,13 @@ function listForNavbarClicks () {
            renderPlaylistView()
            
        } else if (event.target.id === "song-search") {
+           console.log("song search clicked")
            //render song search...ignore for now...
+           renderView(createSongsView(), 'songs')
        } else if (event.target.id === "logout") {
-           //render logout
+           //
+           clearToken()
+           renderView(createLoginView(), 'login')
        }
     })
     

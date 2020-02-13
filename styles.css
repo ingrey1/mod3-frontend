@@ -14,6 +14,11 @@
     
 }
 
+.song-play-style {
+    width: 400px;
+    height: 300px;
+}
+
 .red {
     color: red;
 }
