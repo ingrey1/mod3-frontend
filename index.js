@@ -225,7 +225,8 @@
 
        return `<div class="grid-item hidden"></div>
                <div id="login-div" class="grid-item">
-                <h2>Login</h2> 
+                <h2>Login</h2>
+                <div id="login-error" class="red"></div> 
                <form id="login-form">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" required /><br><br>
@@ -390,7 +391,7 @@
            const password = loginFormElement.querySelector("#password").value
            const userDataObject = {user_info: {email: email, password: password}}
            postLogin(userDataObject).then(data =>{
-                   if (data && data.errors) renderLoginErrors(data.errors)
+                   if (data && data.error) renderLoginErrors(data.error)
                    else { // no errors, so user will have jwt token, and data
                     
                     saveToken(data.token)
@@ -413,8 +414,13 @@
 
    }
 
-   function renderLoginErrors(errors) {
-           console.log(errors);
+   function renderLoginErrors(error) {
+      const errorDiv = document.querySelector("#login-error")
+      errorDiv.innerText = error
+      setTimeout(() => {
+        // clear the error display
+        errorDiv.innerHTML = ""
+      }, 5000)     
    }
 
    function attachListenersForWelcomeView() {
@@ -444,16 +450,15 @@
          }}
          // handle errors
         
-         const errors = validSignupData(userData)
+       
          //debugger
-         if (errors.length > 0) renderSignupErrors(errors)
         
-         else // sign up the user, render their homepage
-            {
+        
                 //debugger       
                 postSignup(userData).then(userData => {
                     clearToken()
-                    if (userData && userData.errors) renderLoginErrors(userData.errors)
+                    debugger
+                    if (userData && userData.errors) renderSignupErrors(userData.errors)
                     else {
                         saveToken(userData.token)
                         saveAllUserDataLocally(userData, false)
@@ -463,7 +468,7 @@
                 } )
             
             
-            }
+            
 
 
 
