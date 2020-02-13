@@ -298,6 +298,7 @@
                 <h1>
                     Here is your profile info:
                 </h1>
+                <button id="delete-user">Delete Account</button>
                 
                 <p id="profile-first-name">First Name: ${currentUserInfo.user.first_name}</p>
                 <p id="profile-last-name">Last Name: ${currentUserInfo.user.last_name}</p>
