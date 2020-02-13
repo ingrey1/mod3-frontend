@@ -1,8 +1,9 @@
 
 (() => { // application code lives inside of iffy
-   clearToken()
+   
    let spotifyToken = "";
-   let addSong
+   // 
+   let addSong = null
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
@@ -12,7 +13,8 @@
       createPlaylist: "http://localhost:3000//api/v1/users",
       deletePlaylist: "http://localhost:3000//api/v1/users", 
       deleteUser: "http://localhost:3000/api/v1/users",  
-      fetchSpotifyToken: "http://localhost:3000/api/v1/users/give_access_token"
+      fetchSpotifyToken: "http://localhost:3000/api/v1/users/give_access_token",
+      getUserData: "http://localhost:3000/api/v1/users"
       // add new api base endpoints here
    }
    // this object will have all the retrieved info:
@@ -60,9 +62,12 @@
 
    document.addEventListener('DOMContentLoaded', function(){
 
-    fetchToken()  
+    //fetchToken()  
     listForNavbarClicks()
-    renderView(createLoginView(), 'login')
+    if (retrieveToken()) getAllUserData().then(data => console.log(data)).then(() => renderView(createWelcomeView(), 'welcome'))
+    else renderView(createLoginView(), 'login')
+
+
     //()
     
 
@@ -190,6 +195,17 @@
          }
          return fetch(urls.signup, configuration).then(resp => resp.json())
      } 
+
+     function getAllUserData() {
+         const url = urls.getUserData + `/magic/playlists`
+         const configuration = {
+             headers: {
+                'Authorization': `Bearer ${retrieveToken()}`,
+                'Accept': 'application/json' 
+             }
+         }
+         return fetch(url, configuration).then(data => saveAllUserDataLocally(data, true) )  
+     }
      
 
    // methods that use fetch to communicate with external music apis
@@ -240,7 +256,13 @@
        return `<div id="song-view">
 
               <h1>Songs</h1>
-       
+               <div id="song-form-container">
+                 <form id="song-form" >
+                   
+                   <input type="text" id="get-songs" placeholder="Track Name" required />
+                   <input type="submit" value="Search " />
+                 </form>
+               </div>
                <div class="songs-container">
                  <ul id="songs-list">${createSongsList()}</ul>
                </div>
@@ -303,7 +325,7 @@
    }
 
    function createWelcomeView() {
-       
+       debugger
        return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1>`
    }
 
@@ -394,6 +416,15 @@
    function attachListenersForSongsView() {
        // listener for clicking on a new song in the list
        const songsList = document.querySelector("#songs-list")
+       const songsForm = document.querySelector("#song-form")
+       // song form listener
+       songsForm.addEventListener('submit', function(e){
+           e.preventDefault();
+           // fetch the search results
+           // then re-render page after setting them in currentUserInfo.songs
+       })
+       
+       
        songsList.addEventListener('click', function(e){
             if (e.target.tagName === 'IMG') {
                 const songId = parseInt(e.target.parentElement.id)
@@ -554,7 +585,11 @@
 
    function saveUserData(user) {
        currentUserInfo.user = user
-   } 
+   }
+   
+   function savePlaylistData(playlists) {
+       currentUserInfo.playlists = playlists
+   }
    
 
 
