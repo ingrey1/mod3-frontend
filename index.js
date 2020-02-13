@@ -206,7 +206,7 @@
 
 
    ///////Donny added code here:
-   function getPlaylistsFromData(userData) {
+   function renderPlaylistsFromData(userData) {
     const arrOfPlaylists = userData["playlists"]
     const playlistDiv = document.getElementById('playlist-div');
     const playlistUl = document.createElement("UL");    
@@ -215,6 +215,7 @@
     //we want just title of playlist.
     const listOfPlaylistTitles = arrOfPlaylists.map(playlist => {
         const playlistLi = document.createElement("LI");
+        playlistLi.id = playlist.id
         playlistLi.classList.add('playlist-name')
         playlistUl.appendChild(playlistLi);
         playlistLi.innerText = playlist.title
@@ -245,16 +246,26 @@
        `
    }
 
-   function renderPlaylistView() {
-       return `
-         <div id="playlist-viewPage">
-           <h1>Here is a list of the Songs on your playlist</h1>
-             <div id="playlist-songs">
-              <p>Interate through playlist songs and print out each song here</p>
-             </div>
-         </div>  
-       `
-   }
+  function renderPlaylistView(playlist) {
+     //build up html for playlist
+     let playListHTML = ""
+    //  playlist.songs[0].name
+    //  playlist.songs[0].artist
+    //  playlist.songs[0].album
+    //  playlist.songs[0].genre
+    playlist.songs.forEach(song => {
+        //get playlist div, make ul plus li for each song
+        playListHTML += `<ul>
+                           <li>${playlist.songs[song].name}</li>
+                           <li>${playlist.songs[song].artist}</li>
+                           <li>${playlist.songs[song].album}</li>
+                           <li>${playlist.songs[song].genre}</li>
+                         </ul>
+                        `
+    })
+
+    return playListHTML
+  }
   
 
    //attach listener to profile view /playlist text
@@ -263,15 +274,15 @@
 
    function attachListenersForProfileView() {
      const playlistName = document.querySelector('#playlist-div');
-     
-     
-     //navBar.removeEventListener('click', listForNavbarClicks)
      playlistName.addEventListener('click', function(e){
          console.log("playlistUl has been clicked!")
-         const playlistClickedOnText = e.target.textContent;
+         const playlistClickedOnId = parseInt(e.target.id); //this grabs playlist id
+         const playlist = currentUserInfo.playlists.find(playlist => {
+           
+             return playlist.id === playlistClickedOnId;
+         })
          
-       
-         // pass in renderProfileView function with variable playlistTitle passed in as an parameter
+         renderPlaylistView(playlist)
      });
 
    }
@@ -488,11 +499,12 @@ function listForNavbarClicks () {
        if(event.target.id === "profile") {
            console.log('profile clicked')
            renderView(createProfileView(), 'profile')
-           getPlaylistsFromData(currentUserInfo)
+           renderPlaylistsFromData(currentUserInfo)
           
 
        } else if (event.target.id === "playlist") {
            renderPlaylistView()
+           
        } else if (event.target.id === "song-search") {
            //render song search...ignore for now...
        } else if (event.target.id === "logout") {
