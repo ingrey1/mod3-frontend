@@ -20,30 +20,30 @@
 
        },
        playlists: [
-        {
-            "id": 1,
-            "title": "playlist1",
-            "songs": [
-                {
-                    "id": 1,
-                    "name": "songName1",
-                    "artist": "artist1",
-                    "album": "album1",
-                    "genre": "genre1",
-                    "created_at": "2020-02-11T22:21:28.840Z",
-                    "updated_at": "2020-02-11T22:21:28.840Z"
-                },
-                {
-                    "id": 6,
-                    "name": "songName6",
-                    "artist": "artist6",
-                    "album": "album6",
-                    "genre": "genre6",
-                    "created_at": "2020-02-11T22:21:28.860Z",
-                    "updated_at": "2020-02-11T22:21:28.860Z"
-                }
-            ]
-        }
+        // {
+        //     "id": 1,
+        //     "title": "playlist1",
+        //     "songs": [
+        //         {
+        //             "id": 1,
+        //             "name": "songName1",
+        //             "artist": "artist1",
+        //             "album": "album1",
+        //             "genre": "genre1",
+        //             "created_at": "2020-02-11T22:21:28.840Z",
+        //             "updated_at": "2020-02-11T22:21:28.840Z"
+        //         },
+        //         {
+        //             "id": 6,
+        //             "name": "songName6",
+        //             "artist": "artist6",
+        //             "album": "album6",
+        //             "genre": "genre6",
+        //             "created_at": "2020-02-11T22:21:28.860Z",
+        //             "updated_at": "2020-02-11T22:21:28.860Z"
+        //         }
+        //     ]
+        // }
     ]
    }
 
@@ -67,7 +67,7 @@
 
         const fullUrl = urls.deletePlaylist + `/${currentUserInfo.user.id}/playlists/${playlist_id}`
         const configuration = {
-            method: "POST",
+            method: "DELETE",
             headers: {
                 "Accept": "application/json",
                 "Authorization": `Bearer ${retrieveToken()}` 
@@ -217,7 +217,8 @@
             attachListenersForProfileView()
             toggleNavBarHidden()
         } else if (viewName === 'playlists') {
-            
+            //listenForDeletePlayList()
+            debugger
             toggleNavBarHidden()
 
         }
@@ -320,11 +321,12 @@
    //function createPlaylistsView()
    //show the names of the playlists and the songs on each
    function renderPlaylistsView(userData) {
-        const playlistDiv = document.querySelector('#playlist-div');
+       
         const arrOfPlaylists = userData["playlists"];
         let newPlaylistHTML = ""
-        arrOfPlaylists.forEach(playlist => {
+        arrOfPlaylists && arrOfPlaylists.forEach(playlist => {
             newPlaylistHTML += `
+                         <div id="all-playlists">
                          <div id="${playlist.id}">
                         
                          <h2>${playlist.title}</h2>
@@ -334,19 +336,39 @@
                            </ul>
                         
                          
-                         <button type="button" id="delete-button">Delete this Playlist</button>
+                         <button type="button" id="delete-button_${playlist.id}">Delete this Playlist</button>
+                         </div>
                          </div>
                          `
-                //   arrOfPlaylists.songs.forEach(song => {
-                //           ${song.name}
-                //           ${song.artist}
-                //           ${song.album}
-                //           ${song.genre}
-                //   })       
+               
         })
-        return newPlaylistHTML 
+        return newPlaylistHTML    
+   }
+
+   //Event Listener for playlistS' delete button
+
+   function listenForDeletePlayList(){
+       const playlistDiv = document.querySelector('#all-playlists');
+       debugger
+       playlistDiv.addEventListener('click', function(event){
+          // check to see if the tagName is 'BUTTON' 
+          const clickedElement = event.target
+          if(clickedElement.tagName === 'BUTTON') {
+              if(clickedElement.id.includes('delete')){
+                 const buttonId = parseInt(clickedElement.id.split('_')[1])
+                 //we have id,now we can delete the playlist by id
+                 deletePlaylist(buttonId).then(resp => console.log(resp))
+              }
     
-       
+          }
+          // button id contains the substring 'delete'
+          // if so, its a delete button
+          // extract the number on the end of the delete button id
+          // for example if the id is "delete-button57", extract 57
+          // turn 57 into a number
+          // then delete that playlist using the appropriate function 
+         
+       })
    }
 
    function createProfileView() {
@@ -452,7 +474,7 @@
                     
                     saveToken(data.token)
             
-                     saveAllUserDataLocally(data, false)
+                     saveAllUserDataLocally(data, true)
                     
                      renderView(createWelcomeView(), 'welcome')
                      
@@ -547,6 +569,10 @@
    function saveUserData(user) {
        currentUserInfo.user = user
    } 
+
+   function savePlaylistData(playlists) {
+      currentUserInfo.playlists = playlists
+   }
    
 
 
