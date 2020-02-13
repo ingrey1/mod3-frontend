@@ -216,8 +216,8 @@
             createProfileView()
             attachListenersForProfileView()
             toggleNavBarHidden()
-        } else if (viewName === 'playlist') {
-            //attachListenersForPlaylistView
+        } else if (viewName === 'playlists') {
+            
             toggleNavBarHidden()
 
         }
@@ -301,6 +301,51 @@
 }
    ////////End of Donny's code
 
+  function playlistSongsHTML(arrOfSongs) {
+    let newSongListHTML = ""
+    arrOfSongs.forEach(song => {
+       newSongListHTML += ` <li>
+            <p>${song.name}</p>
+            <p>${song.artist}</p>
+            <p>${song.album}</p>
+            <p>${song.genre}</p>
+        </li>
+        `
+    })
+
+    return newSongListHTML
+
+  }
+
+   //function createPlaylistsView()
+   //show the names of the playlists and the songs on each
+   function renderPlaylistsView(userData) {
+        const playlistDiv = document.querySelector('#playlist-div');
+        const arrOfPlaylists = userData["playlists"];
+        let newPlaylistHTML = ""
+        arrOfPlaylists.forEach(playlist => {
+            newPlaylistHTML += `
+                         <div id="${playlist.id}">
+                        <!-- add delete button -->
+                         <h2>${playlist.title}</h2>
+                           <ul id="song-ul">
+                           
+                           ${playlistSongsHTML(playlist.songs)}
+                           </ul>
+                         </div>
+                         `
+                //   arrOfPlaylists.songs.forEach(song => {
+                //           ${song.name}
+                //           ${song.artist}
+                //           ${song.album}
+                //           ${song.genre}
+                //   })       
+        })
+        return newPlaylistHTML 
+    
+       
+   }
+
    function createProfileView() {
        return `
             <div id="profile-info">
@@ -361,7 +406,7 @@
              return playlist.id === playlistClickedOnId;
          })
          
-         renderView(renderPlaylistView(playlist), "playlist")
+        // renderView(renderPlaylistView(playlist), "playlist")
      });
      const deleteUserButton = document.querySelector("#delete-user")
     
@@ -379,8 +424,12 @@
       
     }
     // attach listener for delete button
+
     
-        
+    
+    
+    
+       
  
 
    // event listeners
@@ -602,8 +651,8 @@ function listForNavbarClicks () {
            renderPlaylistsFromData(currentUserInfo)
           
 
-       } else if (event.target.id === "playlist") {
-           renderPlaylistView()
+       } else if (event.target.id === "playlists") {
+        renderView(renderPlaylistsView(currentUserInfo), 'playlists')
            
        } else if (event.target.id === "song-search") {
            //render song search...ignore for now...
