@@ -1,5 +1,39 @@
+
+/* #a5f2f3  baby blue */
+
+/* #0abab5 Tiffany blue */
+/* #c0c0c0 contrasting grey */
+
+
 body {
     font-family: 'Barlow Condensed', sans-serif;
+}
+
+#wrapper {
+    margin-top: 3em;
+    width: 80%;
+    margin: 0 auto;
+
+    border: 1px solid red;
+}
+
+#page-title {
+    
+    text-align: center;
+    font-size: 1.7em;
+}
+
+/* center nav bar */
+
+#nav {
+    text-align: center;
+    background: #0abab5;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+#main {
+    margin-left: 2em;
 }
 
 
@@ -39,9 +73,9 @@ body {
         padding: 0;
 }
 
-li {
+#nav li {
     display: inline-block;
-    margin-right: 1em;
+    margin-right: 3em;
     
 }
 
