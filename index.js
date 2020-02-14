@@ -80,7 +80,7 @@
 
      function deletePlaylist(playlist_id) {
 
-        const fullUrl = urls.deletePlaylist + `/${currentUserInfo.user.id}/playlists/${playlist_id}`
+        const fullUrl = urls.deletePlaylist + `${currentUserInfo.user.id}/playlists/${playlist_id}`
         const configuration = {
             method: "DELETE",
             headers: {
