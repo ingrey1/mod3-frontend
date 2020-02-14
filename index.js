@@ -332,7 +332,8 @@
 
    function createWelcomeView() {
        
-       return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1>`
+       return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1><br>
+               `
    }
 
 
