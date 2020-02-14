@@ -400,6 +400,7 @@
    //Event Listener for playlistS' delete button
 
    function listenForDeletePlayList(){
+
        const playlistDiv = document.querySelector('#all-playlists');
        debugger
        playlistDiv.addEventListener('click', function(event){
@@ -566,9 +567,9 @@
                    else { // no errors, so user will have jwt token, and data
                     
                     saveToken(data.token)
-            
+                     
                      saveAllUserDataLocally(data, true)
-                    
+                     debugger
                      renderView(createWelcomeView(), 'welcome')
                      
                    }
@@ -659,12 +660,19 @@
        // save user data
        saveUserData(data.user)
        // save playlist data
-        if (doSavePlaylists) savePlaylistData(data.playlists)
+        if (doSavePlaylists) savePlaylistData(data.user.playlists)
        
    }
 
    function saveUserData(user) {
-       currentUserInfo.user = user
+
+       currentUserInfo.user = {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        username: user.username
+       }
    }
    
    function savePlaylistData(playlists) {
