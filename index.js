@@ -98,7 +98,7 @@
      function createPlayList(data) {
 
 
-        const fullUrl = urls.createPlaylist + ` `
+        const fullUrl = urls.createPlaylist + `/${currentUserInfo.user.id}/playlists`
 
         const configuration = {
             method: "POST",
@@ -107,7 +107,7 @@
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${retrieveToken()}`
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({title: data})
         }
 
         return fetch(fullUrl, configuration).then(resp => resp.json())
@@ -233,7 +233,9 @@
             toggleNavBarHidden()
         } else if (viewName === 'playlists') {
             listenForDeletePlayList()
-            debugger
+            listenForCreatePlaylistFormSubmit()
+
+            
             toggleNavBarHidden()
         } else if (viewName === 'songs') {
             attachListenersForSongsView()
@@ -329,7 +331,7 @@
    }
 
    function createWelcomeView() {
-       debugger
+       
        return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1>`
    }
 
@@ -352,6 +354,9 @@
     });
     return playlistUl;
 }
+
+
+
    ////////End of Donny's code
 
   function playlistSongsHTML(arrOfSongs) {
@@ -375,10 +380,16 @@
    function renderPlaylistsView(userData) {
        
         const arrOfPlaylists = userData["playlists"];
-        let newPlaylistHTML = ""
+        let newPlaylistHTML = `
+        <form id="create-playlist-form">
+          <input type="text" id="new-playlist-name" required>
+          <input type="submit">
+        </form>
+        
+        <div id="all-playlists">`
         arrOfPlaylists && arrOfPlaylists.forEach(playlist => {
             newPlaylistHTML += `
-                         <div id="all-playlists">
+
                          <div id="${playlist.id}">
                         
                          <h2>${playlist.title}</h2>
@@ -390,11 +401,26 @@
                          
                          <button type="button" id="delete-button_${playlist.id}">Delete this Playlist</button>
                          </div>
-                         </div>
+    
                          `
                
         })
+        newPlaylistHTML += "</div>"
         return newPlaylistHTML    
+   }
+
+   function listenForCreatePlaylistFormSubmit() {
+       const form = document.querySelector("#create-playlist-form")
+       form.addEventListener('submit', function(e){
+           e.preventDefault()
+           const playlistName = form.querySelector("#new-playlist-name").value
+           createPlayList(playlistName).then(resp => {
+            saveAllUserDataLocally(resp, true) 
+            renderView(renderPlaylistsView(currentUserInfo), 'playlists')
+        
+        })
+
+       })
    }
 
    //Event Listener for playlistS' delete button
@@ -402,7 +428,7 @@
    function listenForDeletePlayList(){
 
        const playlistDiv = document.querySelector('#all-playlists');
-       debugger
+       
        playlistDiv.addEventListener('click', function(event){
           // check to see if the tagName is 'BUTTON' 
           const clickedElement = event.target
@@ -410,7 +436,11 @@
               if(clickedElement.id.includes('delete')){
                  const buttonId = parseInt(clickedElement.id.split('_')[1])
                  //we have id,now we can delete the playlist by id
-                 deletePlaylist(buttonId).then(resp => console.log(resp))
+                 deletePlaylist(buttonId).then(resp => {
+                          currentUserInfo.playlists = currentUserInfo.playlists.filter(p => p.id !== buttonId)
+                          
+                          renderView(renderPlaylistsView(currentUserInfo), 'playlists')
+                 })
               }
     
           }
@@ -569,7 +599,7 @@
                     saveToken(data.token)
                      
                      saveAllUserDataLocally(data, true)
-                     debugger
+                     
                      renderView(createWelcomeView(), 'welcome')
                      
                    }
