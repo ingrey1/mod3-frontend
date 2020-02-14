@@ -27,11 +27,138 @@
 
        songs: [{
            id: 7,
-           album_url: "https://i.scdn.co/image/ab67616d000048517645656d7c2dc87d84204986",
-           artist: "amazing artist",
-           title: "Holy Diver",
-           url: "https://open.spotify.com/embed/album/2jVdrR7UYTElDAciwt6qu7?highlight=spotify:track:1mHXSQFVH2wp9YbgJARO0e"
-       }],
+           album_url: "https://i.scdn.co/image/ab67616d00001e02b361ce46dbadbf8a11081b60",
+           artist: "Khalid",
+           title: "Right Back",
+           url: "https://open.spotify.com/track/5A1w94uzc1kO1Zhe8WWxC3"
+       }, 
+        {
+            id: 2,
+            album_url: "https://i.scdn.co/image/ab67616d00001e02a18b79fb2b2dad009273e975",
+            artist: "Big Bang",
+            title: "Bad Boy",
+            url: "https://open.spotify.com/track/2Isr0kihGiO4qptPehqatg"
+        }, 
+        {
+            id: 3,
+            album_url: "https://i.scdn.co/image/18bfa32e7697dd5107f744ce419eca44dbd90df8",
+            artist: "Drake",
+            title: "Nonstop",
+            url: "https://open.spotify.com/track/4pQiWe7SzoQdGF6z8ZoZ9v"
+        }, 
+        {
+            id: 4,
+            album_url: "https://i.scdn.co/image/ab67616d00001e02c254d65fe5b476422e725307",
+            artist: "Bazzi",
+            title: "I.F.L.Y",
+            url: "https://open.spotify.com/track/2WTgKSoBJpGpeenyf1Jeyt"
+        }, 
+        {
+            id: 5,
+            album_url: "https://i.scdn.co/image/2b253096a078659d790cfb592e5aa2aa2a128d43",
+            artist: "Ariana Grande",
+            title: "Nasa",
+            url: "https://open.spotify.com/album/2fYhqwDWXjbpjaIJPEfKFw"
+        }, 
+        {
+            id: 6,
+            album_url: "https://i.scdn.co/image/3fe72580feb74b3653ecefb09825f6da66d2ae2d",
+            artist: "Jackson 5",
+            title: "I Want You Back",
+            url: "https://open.spotify.com/track/2Qo92GGOQWWSycJ3Iclwmr"
+        }, 
+        {
+            id: 8,
+            album_url: "https://i.scdn.co/image/c1089cff998cefc067f23429f7849b425015605b",
+            artist: "Travis Scott (Skrillex Remix)",
+            title: "Sicko Mode",
+            url: "https://open.spotify.com/artist/0Y5tJX1MQlPlqiwlOH1tJY"
+        }, 
+        {
+            id: 9,
+            album_url: "https://i.scdn.co/image/0da4687fbdcc641cca0605587995014e5f548b59",
+            artist: "Jhene Aiko",
+            title: "Bed Peace",
+            url: "https://open.spotify.com/track/3iIrtgucy1S2IMtozeYARI"
+        }, 
+        {
+            id: 10,
+            album_url: "https://i.scdn.co/image/ab67616d00001e02e925354d072289ef8fcbc36e",
+            artist: "Childish Gambino",
+            title: "This is America (Inst)",
+            url: "https://open.spotify.com/track/3B0wbMLhU05v2sQcJ4VQj6"
+        }, 
+        {
+            id: 11,
+            album_url: "https://i.scdn.co/image/8711cefd16bc5ca402ae57dd9d842768dfb3e4fe",
+            artist: "Halsey",
+            title: "Without Me",
+            url: "https://open.spotify.com/track/5p7ujcrUXASCNwRaWNHR1C"
+        }, 
+        {
+            id: 12,
+            album_url: "https://i.scdn.co/image/ab67616d00001e0213a6ef8345c14d2eeb2a37ef",
+            artist: "Dua Lipa",
+            title: "Physical",
+            url: "https://open.spotify.com/track/5px6upUHM3fhOP621Edp4V"
+        }, 
+        {
+            id: 13,
+            album_url: "https://i.scdn.co/image/ab67616d00001e0279b99d7554c7a3f7f92d539a",
+            artist: "Lady Gaga",
+            title: "Million Reasons",
+            url: "https://open.spotify.com/track/6JVoPgJObjdglxhyH81Q1i"
+        }, 
+        {
+            id: 14,
+            album_url: "https://i.scdn.co/image/6c76a1062f96914358b73054aea2cbf5c647b71c",
+            artist: "daBaby",
+            title: "Suge",
+            url: "https://open.spotify.com/artist/4r63FhuTkUYltbVAg5TQnk"
+        }, 
+        {
+            id: 15,
+            album_url: "https://i.scdn.co/image/ab67616d00001e027ac73c439819e81f544cc023",
+            artist: "Zico",
+            title: "Soulmate",
+            url: "https://open.spotify.com/track/1pz24zu5H9A0S1a2NKT4F0"
+        }, 
+        {
+            id: 16,
+            album_url: "https://i.scdn.co/image/4f93d9739ee12647ef5a33b80fe91755a14f9873",
+            artist: "Sam Smith",
+            title: "Dancing with a Stranger",
+            url: "https://open.spotify.com/artist/2wY79sveU1sp5g7SokKOiI"
+        }, 
+        {
+            id: 17,
+            album_url: "https://i.scdn.co/image/92aee96b9675780b7f5eb349ddce14da506476ac",
+            artist: "Gallant",
+            title: "Weight in Gold",
+            url: "https://open.spotify.com/track/1gXBi2I04CLJkTQnhNfEJT"
+        }, 
+        {
+            id: 18,
+            album_url: "https://i.scdn.co/image/0a2bbe6210ffa90194ad74b69c7d3245761d9e43",
+            artist: "Thrice",
+            title: "The Artist In The Ambulance",
+            url: "https://open.spotify.com/track/0arNrzPygksLY2pEbRgBjw"
+        }, 
+        {
+            id: 19,
+            album_url: "https://i.scdn.co/image/045a9e9b13dfbf40d5638e7ae0c840b5e34cdfad",
+            artist: "John Coltrane",
+            title: "In A Sentimental Mood",
+            url: "https://open.spotify.com/track/0E8q2Fx2XuzXCO2NSAppkR"
+        }, 
+        {
+            id: 20,
+            album_url: "https://i.scdn.co/image/ab67616d00001e028848d57cbfa7751e028f4dc9",
+            artist: "John Mayor",
+            title: "Your Body is Wonderland",
+            url: "https://open.spotify.com/track/7vFv0yFGMJW3qVXbAd9BK9"
+        }
+    ],
        
        playlists: [
         {
@@ -687,7 +814,7 @@ function listForNavbarClicks () {
 
 }
 function createSongFromSpotifyData(song_info) {
-
+    const song_info = kh
 }
 
 function fetchToken() {
@@ -720,7 +847,7 @@ function fetchSongs() {
 
 
 
-//
+
 
 
 
