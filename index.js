@@ -1,7 +1,9 @@
 
 (() => { // application code lives inside of iffy
-   clearToken()
+   
    let spotifyToken = "";
+   // 
+   let addSong = null
    // our base endpoints
    const urls = {
       login: "http://localhost:3000/api/v1/users/login",
@@ -11,7 +13,8 @@
       createPlaylist: "http://localhost:3000//api/v1/users",
       deletePlaylist: "http://localhost:3000//api/v1/users", 
       deleteUser: "http://localhost:3000/api/v1/users",  
-      fetchSpotifyToken: "http://localhost:3000/api/v1/users/give_access_token"
+      fetchSpotifyToken: "http://localhost:3000/api/v1/users/give_access_token",
+      getUserData: "http://localhost:3000/api/v1/users"
       // add new api base endpoints here
    }
    // this object will have all the retrieved info:
@@ -19,6 +22,15 @@
        user: {
 
        },
+
+       songs: [{
+           id: 7,
+           album_url: "https://i.scdn.co/image/ab67616d000048517645656d7c2dc87d84204986",
+           artist: "amazing artist",
+           title: "Holy Diver",
+           url: "https://open.spotify.com/embed/album/2jVdrR7UYTElDAciwt6qu7?highlight=spotify:track:1mHXSQFVH2wp9YbgJARO0e"
+       }],
+       
        playlists: [
         // {
         //     "id": 1,
@@ -52,7 +64,10 @@
 
     //fetchToken()  
     listForNavbarClicks()
+    
     renderView(createLoginView(), 'login')
+
+
     //()
     
 
@@ -105,7 +120,7 @@
 
      function deleteUser(userId) {
           
-         //debugger
+         
           
           const fullUrl = urls.deleteUser + `/${userId}`
           const configuration = {
@@ -136,17 +151,7 @@
 
      //  add song to user's playlist
      function addSongToPlaylist(data) {
-        // data structure 
-        /*
-          {  
-           
-            
-             song_info: {
-                // song attributes
-             }  
-        
-          }  
-        */
+     
         const fullUrl = urls.addSongToPlaylist + `/${currentUserInfo.user.id}/playlists/${data.play_list_id}/songs`
 
          const configuration = {
@@ -190,13 +195,24 @@
          }
          return fetch(urls.signup, configuration).then(resp => resp.json())
      } 
+
+     function getAllUserData() {
+         const url = urls.getUserData + `/magic/playlists`
+         const configuration = {
+             headers: {
+                'Authorization': `Bearer ${retrieveToken()}`,
+                'Accept': 'application/json' 
+             }
+         }
+         return fetch(url, configuration).then(data => saveAllUserDataLocally(data, true) )  
+     }
      
 
    // methods that use fetch to communicate with external music apis
 
    // methods used to render the 'view' or 'view' elements
    function renderView(view, viewName) {
-      
+       
        const mainElement = document.querySelector("#main")
        mainElement.innerHTML = ""
        mainElement.innerHTML += view
@@ -213,24 +229,60 @@
            attachListenersForWelcomeView()
            toggleNavBarHidden()
         } else if (viewName === 'profile') {
-            createProfileView()
             attachListenersForProfileView()
             toggleNavBarHidden()
         } else if (viewName === 'playlists') {
-            //listenForDeletePlayList()
+            listenForDeletePlayList()
             debugger
             toggleNavBarHidden()
-
+        } else if (viewName === 'songs') {
+            attachListenersForSongsView()
+            toggleNavBarHidden()
         }
         //elsif view is 'signup' attach signup listeners, etc.
 
    }
-   // methods used to create the 'views' - e.g., the signup page, the login page, the playlist page etc.   
+   // methods used to create the 'views' - e.g., the signup page, the login page, the playlist page etc. 
+    function createSongsList() {
+        let songLis = ""
+        currentUserInfo.songs.forEach((song) => {
+            songLis += `<li id="${song.id}">
+            <img src="${song.album_url}" />
+            <h3>${song.title}</h3>
+            <h5>${song.artist}</h5>
+            <button>Add to a Playlist</button>
+            </li>`
+        })
+        return songLis
+    }
+   function createSongsView() {
+
+       return `<div id="song-view">
+
+              <h1>Songs</h1>
+               <div id="song-form-container">
+                 <form id="song-form" >
+                   
+                   <input type="text" id="get-songs" placeholder="Track Name" required />
+                   <input type="submit" value="Search " />
+                 </form>
+               </div>
+               <div class="songs-container">
+                 <ul id="songs-list">${createSongsList()}</ul>
+               </div>
+               <div id="song-iframe">
+                   
+               </div>
+              </div>
+       `
+   }
+
    function createLoginView() {
 
        return `<div class="grid-item hidden"></div>
                <div id="login-div" class="grid-item">
-                <h2>Login</h2> 
+                <h2>Login</h2>
+                <div id="login-error" class="red"></div> 
                <form id="login-form">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" required /><br><br>
@@ -277,7 +329,7 @@
    }
 
    function createWelcomeView() {
-       
+       debugger
        return `<h1>Welcome, ${currentUserInfo.user.first_name}</h1>`
    }
 
@@ -403,6 +455,7 @@
     //  playlist.songs[0].genre
     playlist.songs.forEach(song => {
         //get playlist div, make ul plus li for each song
+
         playListHTML += `
                             <ul class="playlist-ul">
                                 <li>Song name: ${song.name}</li>
@@ -410,16 +463,56 @@
                                 <li>Album name: ${song.album}</li>
                                 <li>Genre: ${song.genre}</li>
                             </ul>                   
+
                         `
     })
      
     return playListHTML
   }
   
+  function createSongIFrameHTML(song) {
+      return `<iframe src="${song.url}" class="song-play-style"></iframe>`
+
+  }
+
+  function renderSongIFrame(iframe) {
+
+      
+      const iframeContainer = document.querySelector("#song-iframe")
+      iframeContainer.innerHTML = ""
+      iframeContainer.innerHTML = iframe
+
+  }
 
    //attach listener to profile view /playlist text
    //when user clicks on playlist, he gets directed
    //to a playlist view.
+
+
+   function attachListenersForSongsView() {
+       // listener for clicking on a new song in the list
+       const songsList = document.querySelector("#songs-list")
+       const songsForm = document.querySelector("#song-form")
+       // song form listener
+       songsForm.addEventListener('submit', function(e){
+           e.preventDefault();
+           // fetch the search results
+           // then re-render page after setting them in currentUserInfo.songs
+       })
+       
+       
+       songsList.addEventListener('click', function(e){
+            if (e.target.tagName === 'IMG') {
+                const songId = parseInt(e.target.parentElement.id)
+                const song = currentUserInfo.songs.find((song) => song.id === songId)
+                
+                // empty iframe div, replace with new iframe for this song
+                renderSongIFrame(createSongIFrameHTML(song))
+
+            }
+          
+       })
+   }
 
    function attachListenersForProfileView() {
      const playlistName = document.querySelector('#playlist-div');
@@ -469,7 +562,7 @@
            const password = loginFormElement.querySelector("#password").value
            const userDataObject = {user_info: {email: email, password: password}}
            postLogin(userDataObject).then(data =>{
-                   if (data && data.errors) renderLoginErrors(data.errors)
+                   if (data && data.error) renderLoginErrors(data.error)
                    else { // no errors, so user will have jwt token, and data
                     
                     saveToken(data.token)
@@ -492,8 +585,13 @@
 
    }
 
-   function renderLoginErrors(errors) {
-           console.log(errors);
+   function renderLoginErrors(error) {
+      const errorDiv = document.querySelector("#login-error")
+      errorDiv.innerText = error
+      setTimeout(() => {
+        // clear the error display
+        errorDiv.innerHTML = ""
+      }, 5000)     
    }
 
    function attachListenersForWelcomeView() {
@@ -523,16 +621,15 @@
          }}
          // handle errors
         
-         const errors = validSignupData(userData)
-         //debugger
-         if (errors.length > 0) renderSignupErrors(errors)
+       
+         
         
-         else // sign up the user, render their homepage
-            {
-                //debugger       
+        
+                       
                 postSignup(userData).then(userData => {
                     clearToken()
-                    if (userData && userData.errors) renderLoginErrors(userData.errors)
+                    
+                    if (userData && userData.errors) renderSignupErrors(userData.errors)
                     else {
                         saveToken(userData.token)
                         saveAllUserDataLocally(userData, false)
@@ -542,7 +639,7 @@
                 } )
             
             
-            }
+            
 
 
 
@@ -568,10 +665,10 @@
 
    function saveUserData(user) {
        currentUserInfo.user = user
-   } 
-
+   }
+   
    function savePlaylistData(playlists) {
-      currentUserInfo.playlists = playlists
+       currentUserInfo.playlists = playlists
    }
    
 
@@ -579,7 +676,7 @@
    // validation methods
    function renderSignupErrors(errors) {
     const errorDiv = document.querySelector("#signup-errors")
-       //debugger
+       
        if (errors.length > 0) {
           // display errors
           errorDiv.innerHTML = "There are errors for these fields: "
@@ -589,7 +686,7 @@
             }, "" ) 
             //
             
-          //debugger
+          
           setTimeout(() => {
             // clear the error display
             errorDiv.innerHTML = ""
@@ -611,7 +708,7 @@
     if (!validPassword(data.user_info.password)) errors.push('Password')
     if (!validPasswordConfirmation(data.user_info.password, data.user_info.password_confirmation)) errors.push('Password')
 
-     //debugger
+     
     return errors
 
          
@@ -684,9 +781,13 @@ function listForNavbarClicks () {
         renderView(renderPlaylistsView(currentUserInfo), 'playlists')
            
        } else if (event.target.id === "song-search") {
+           console.log("song search clicked")
            //render song search...ignore for now...
+           renderView(createSongsView(), 'songs')
        } else if (event.target.id === "logout") {
-           //render logout
+           //
+           clearToken()
+           renderView(createLoginView(), 'login')
        }
     })
     
